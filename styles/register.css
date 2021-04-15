@@ -1,8 +1,8 @@
-.login-form {
+.registration-form {
   padding: 50px 0;
 }
 
-.login-form form {
+.registration-form form {
   -webkit-box-shadow: 0px -1px 9px 5px rgba(0, 0, 0, 0.06);
   -moz-box-shadow: 0px -1px 9px 5px rgba(0, 0, 0, 0.06);
   box-shadow: 0px -1px 9px 5px rgba(0, 0, 0, 0.06);
@@ -15,7 +15,7 @@
   border-top-right-radius: 30px;
 }
 
-.login-form .form-icon {
+.registration-form .form-icon {
   text-align: center;
   background-color: #5891ff;
   border-radius: 50%;
@@ -28,13 +28,13 @@
   line-height: 100px;
 }
 
-.login-form .item {
+.registration-form .item {
   border-radius: 20px;
   margin-bottom: 25px;
   padding: 10px 20px;
 }
 
-.login-form .create-account {
+.registration-form .create-account {
   border-radius: 30px;
   padding: 10px 20px;
   font-size: 18px;
@@ -45,18 +45,7 @@
   margin-top: 20px;
 }
 
-.create-account-atras {
-  border-radius: 30px;
-  padding: 10px 20px;
-  font-size: 18px;
-  font-weight: bold;
-  background-color: #1dd7f0;
-  border: none;
-  color: white;
-  margin-top: 20px;
-}
-
-.login-form .social-media {
+.registration-form .social-media {
   max-width: 600px;
   background-color: #fff;
   margin: auto;
@@ -69,7 +58,7 @@
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.075);
 }
 
-.login-form .social-icons {
+.registration-form .social-icons {
   margin-top: 30px;
   margin-bottom: 16px;
 }
@@ -78,7 +67,7 @@
   padding-top: 25px;
   text-align: center;
 }
-.login-form .social-icons a {
+.registration-form .social-icons a {
   font-size: 23px;
   margin: 0 3px;
   color: #5691ff;
@@ -92,17 +81,17 @@
   line-height: 45px;
 }
 
-.login-form .social-icons a:hover {
+.registration-form .social-icons a:hover {
   text-decoration: none;
   opacity: 0.6;
 }
 
 @media (max-width: 576px) {
-  .login-form form {
+  .registration-form form {
     padding: 50px 20px;
   }
 
-  .login-form .form-icon {
+  .registration-form .form-icon {
     width: 70px;
     height: 70px;
     font-size: 30px;
