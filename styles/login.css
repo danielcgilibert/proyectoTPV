@@ -1,98 +1,98 @@
-body {
-    font-family: "Lato", sans-serif;
-}
 
 
-
-.main-head{
-    height: 150px;
-    background: #FFF;
-   
+.main-head {
+  height: 150px;
+  background: #fff;
 }
 label {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
-input{
-    color: black;
-    border: 0px;
-    border-bottom: 1px solid black;
-    font-size: 16px;
-    margin-bottom: 10px;
-    height: 50px;
-    width: 100%;
-    -webkit-box-shadow: 10px 10px 5px -5px rgba(0,0,0,0.34);
-    -moz-box-shadow: 10px 10px 5px -5px rgba(0,0,0,0.34);
-    box-shadow: 10px 10px 5px -5px rgba(0,0,0,0.34);
-    transition: border-bottom .3s ease;
+input {
+  color: black;
+  border: 0px;
+  border-bottom: 1px solid black;
+  font-size: 16px;
+  margin-bottom: 10px;
+  height: 50px;
+  width: 100%;
+  -webkit-box-shadow: 10px 10px 5px -5px rgba(0, 0, 0, 0.34);
+  -moz-box-shadow: 10px 10px 5px -5px rgba(0, 0, 0, 0.34);
+  box-shadow: 10px 10px 5px -5px rgba(0, 0, 0, 0.34);
+  transition: border-bottom 0.3s ease;
 }
 
-input:hover{
-    border-bottom: 1px solid rgba(0, 0, 0, 0.397);
-    outline: none;
+input:hover {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.397);
+  outline: none;
 }
-
 
 .sidenav {
-    height: 100%;
-    background-color:#0E87EA;
-    overflow-x: hidden;
-    padding-top: 20px;
+  height: 100%;
+  background-color: #0e87ea;
+  overflow-x: hidden;
+  padding-top: 20px;
 }
-
 
 .main {
-    padding: 0px 10px;
+  padding: 0px 10px;
 }
 
+a, a:hover, a:focus, a:active {
+  text-decoration: none;
+  color: inherit;
+}
+
+
 @media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
+  .sidenav {
+    padding-top: 15px;
+  }
 }
 
 @media screen and (max-width: 450px) {
-    .login-form{
-        margin-top: 10%;
-    }
+  .login-form {
+    margin-top: 10%;
+  }
 
-    .register-form{
-        margin-top: 10%;
-    }
+  .register-form {
+    margin-top: 10%;
+  }
 }
 
-@media screen and (min-width: 768px){
-    .main{
-        margin-left: 40%; 
-    }
+@media screen and (min-width: 768px) {
+  .main {
+    margin-left: 40%;
+  }
 
-    .sidenav{
-        width: 40%;
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        left: 0;
-    }
+  .sidenav {
+    width: 40%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
 
-    .login-form{
-        margin-top: 80%;
-    }
+  .login-form {
+    margin-top: 80%;
+  }
 
-    .register-form{
-        margin-top: 20%;
-    }
-}
-
-
-.login-main-text{
+  .register-form {
     margin-top: 20%;
-    padding: 60px;
-    color: #fff;
+  }
 }
 
-.login-main-text h2{
-    font-weight: 300;
+.login-main-text {
+  margin-top: 20%;
+  padding: 60px;
+  color: #fff;
 }
 
-.btn-blue{
-    background-color: rgb(27, 116, 189) !important;
-    color: #fff;
+.login-main-text h2 {
+  font-weight: 300;
+}
+
+.btn-blue {
+  background-color: rgb(27, 116, 189) !important;
+  color: #fff;
 }

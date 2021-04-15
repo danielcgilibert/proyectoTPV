@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
+
+.nav-link{
+    margin-left: 5px;
+}
+
+nav{
+    border-bottom: 5px solid rgb(27, 116, 189);
+}
+
+.tituloNav{
+    border-bottom: 3px solid white;
+    font-family: 'Julius Sans One', sans-serif;
+}

@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+
+body {
+    margin: 0px;
+    padding-top: 56px;
+    font-family: 'Roboto', sans-serif !important;
+}
+
+  .jumbotron{
+      background-image: url("https://cdn.atrapalo.com/common/photo/res/51759/0/ticr_890_370.jpg") ;
+  }
+
+  .textoJumbotron .display-3{
+    font-family: 'Julius Sans One', sans-serif;
+  }
+
+  .textoJumbotron {
+
+    background-color: rgba(26, 25, 25, 0.76);
+    font-weight: bold;
+    border-radius: 15px;
+    border: 3px solid rgb(255, 255, 255);
+    padding: 15px;
+    color: white;
+  }
+  
+
+
+
+.cardFood{
+
+    border: 0px solid #000000;
+    transition: 0.3s linear; 
+}
+
+.cardFood:hover{
+
+    transform: scale(1.1);
+}
