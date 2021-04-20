@@ -1,10 +1,13 @@
 <?php 
     require('head.php');
+
+    session_start();
+
 ?>
 
 
 <div class="login-form animate__animated animate__backInDown">
-        <form>
+        <form action="db/login.php" method="POST" >
             <div class="form-icon">
                 <span> <i class="fas fa-user icono"> </i> </span>
             </div>
@@ -20,7 +23,7 @@
 
 
             <div class="form-group">
-                <button type="button" class="btn btn-block create-account">Iniciar</button>
+                <button type="submit" class="btn btn-block create-account">Iniciar</button>
                 <a class="btn btn-info btn-block create-account-atras" href="./register.php">Registrarse</a>
 
                 <a class="btn btn-info btn-block create-account-atras" href="./index.php">Inicio</a>

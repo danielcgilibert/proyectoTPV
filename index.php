@@ -12,7 +12,7 @@ require('head.php');
    ?>
 
 
-   <div class="container animate__animated animate__fadeIn">
+   <div class="container portada animate__animated animate__fadeIn">
 
       <!-- Jumbotron Header -->
       <header class="jumbotron my-4">

@@ -4,10 +4,12 @@
 
 body {
     margin: 0px;
-    padding-top: 56px;
     font-family: 'Roboto', sans-serif !important;
 }
 
+.portada{
+  padding: 57px;
+}
   .jumbotron{
       background-image: url("https://cdn.atrapalo.com/common/photo/res/51759/0/ticr_890_370.jpg") ;
   }
