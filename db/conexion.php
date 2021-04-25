@@ -1,7 +1,7 @@
 <?php
 
     $host = 'localhost'; 
-    $baseDatos = 'tpv'; 
+    $baseDatos = 'gradotpv'; 
     $usuario = 'root'; 
     $contrasenia = ''; 
 

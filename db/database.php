@@ -49,6 +49,28 @@ function cargar_productos($categoria)
 	return $listaProductos;
 }
 
+function cargar_mesas()
+{
+	include 'conexion.php'; 
+
+	$bd = mysqli_connect($host, $usuario, $contrasenia, $baseDatos);
+	$ins = "SELECT * from mesa";
+	$resul = mysqli_query($bd, $ins);
+
+	if (!$resul) {
+		return FALSE;
+	}
+
+	$listaMesas = array();
+
+	while ($fila = mysqli_fetch_assoc($resul)) {
+		$listaMesas[] = $fila;
+	}
+    
+	//si hay 1 o más
+	return $listaMesas;
+}
+
 
 
 
