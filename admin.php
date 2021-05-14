@@ -355,6 +355,8 @@ foreach ($categorias as $categoria) {
             <?php if (count($productos)) {
               echo '<h2>'  . $categoria  . '</h2>';
               echo '<hr/>';
+              echo ' <button type="button" class="btn btn-light p-2 "><i class="far fa-plus-square mr-2"></i>  Añadir Producto </button>
+              ';
             } ?>
 
             <div class="row text-center">
@@ -447,7 +449,7 @@ foreach ($categorias as $categoria) {
 
                 </div>
                 <div class="modal-footer">
-                <button type="button" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-success" id="updateProducto">Guardar</button>
 
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
 
@@ -651,11 +653,11 @@ foreach ($categorias as $categoria) {
       </div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
+    <!--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
+    <!--<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>-->
 
-    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-    <script src="js/dashboard.js"></script>
+
 
     <script>
       feather.replace()
@@ -664,6 +666,7 @@ foreach ($categorias as $categoria) {
     require('footer.php');
 
     ?>
+    <script src="js/dashboard.js"></script>
 
 </body>
 
