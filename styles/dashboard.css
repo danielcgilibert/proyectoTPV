@@ -85,11 +85,17 @@
   padding: 0;
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
 }
-
-#modalProducto label i {
+img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 150px;
+  height: 200px;
+}
+ label i {
   padding: 7px;
 }
-#modalProducto label {
+ label {
   font-weight: 600;
 }
 
@@ -105,7 +111,15 @@
   font-weight:bold;
 }
 
+.pointer {
+  cursor: pointer
+}
 
+.cardUsuario{
+  -webkit-box-shadow: 10px 10px 5px -8px rgba(0,0,0,0.75);
+-moz-box-shadow: 10px 10px 5px -8px rgba(0,0,0,0.75);
+box-shadow: 10px 10px 5px -8px rgba(0,0,0,0.75);
+}
 
 .navbar-brand {
   padding-top: 0.75rem;

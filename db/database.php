@@ -72,6 +72,29 @@ function cargar_mesas()
 }
 
 
+function cargar_usuarios()
+{
+	include 'conexion.php'; 
+
+	$bd = mysqli_connect($host, $usuario, $contrasenia, $baseDatos);
+	$ins = "SELECT * from usuario";
+	$resul = mysqli_query($bd, $ins);
+
+	if (!$resul) {
+		return FALSE;
+	}
+
+	$listaUsuarios = array();
+
+	while ($usuario = mysqli_fetch_assoc($resul)) {
+		$listaUsuarios[] = $usuario;
+	}
+    
+	//si hay 1 o más
+	return $listaUsuarios;
+}
+
+
 
 
 
