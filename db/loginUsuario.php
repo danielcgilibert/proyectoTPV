@@ -22,7 +22,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
 			if (isset($_SESSION['errorLogin'])) {
 				unset($_SESSION['errorLogin']);
 			}
-			$_SESSION['user'] = array('id' => $row['idUsuario'], 'nombre' => $row['nombre'], 'email' => $row['email'],);
+			$_SESSION['user'] = array('id' => $row['idUsuario'], 'nombre' => $row['nombre'], 'email' => $row['email'],'tipo' => $row['perfil']);
 			header("Location: ../admin.php");
 		} else {
 			header("Location: ../login.php");

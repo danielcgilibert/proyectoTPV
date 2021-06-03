@@ -9,6 +9,7 @@ require_once "./db/database.php";
 $mesas = cargar_mesas();
 $categorias = cargar_categorias();
 $usuarios = cargar_usuarios();
+$empresa = cargar_empresa();
 foreach ($categorias as $categoria) {
   $productosCa[$categoria["nombre"]] = cargar_productos($categoria["idCategoria"]);
 }
@@ -18,12 +19,79 @@ if (isset($_SESSION['user'])) { ?>
   <body>
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" style="color: white;">Aroma Tapas</a>
+      <button class="navbar-toggler d-block d-sm-block d-md-none" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+          <li class="nav-item menuLink">
+            <a class="nav-link active" href="#" id="dashboard-Link">
+              <i class="fas fa-home"></i>
+              Dashboard
+            </a>
+          </li>
+          <?php if ($_SESSION['user']['tipo'] == '3') { ?>
+
+            <li class="nav-item menuLink">
+              <a class="nav-link" href="#" id="Empresa-Link">
+                <i class="fas fa-briefcase"></i>
+                Empresa
+              </a>
+            </li>
+            <li class="nav-item menuLink">
+              <a class="nav-link" href="#" id="Categorias-Link">
+                <i class="fas fa-list-alt"></i>
+                Categorías
+              </a>
+            </li>
+            <li class="nav-item menuLink">
+              <a class="nav-link" href="#" id="Productos-Link">
+                <i class="fas fa-utensils"></i>
+                Productos
+              </a>
+            </li>
+          <?php } ?>
+
+          <?php if ($_SESSION['user']['tipo'] == '2' || $_SESSION['user']['tipo'] == '3') { ?>
+            <li class="nav-item menuLink">
+              <a class="nav-link" href="#" id="Pedidos-Link">
+                <i class="fas fa-list"></i>
+                Pedidos Cocina
+              </a>
+            </li>
+
+          <?php } ?>
+          <?php if ($_SESSION['user']['tipo'] == '3') { ?>
+
+            <li class="nav-item menuLink">
+              <a class="nav-link " href="#" id="Usuarios-Link">
+                <i class="fas fa-users"></i>
+                Usuarios
+              </a>
+            </li>
+
+            <li class="nav-item menuLink">
+              <a class="nav-link " href="#" id="Ticket-Link">
+                <i class="fas fa-ticket-alt"></i>
+                Ticket
+              </a>
+            </li>
+          <?php } ?>
+
+
+          <?php if ($_SESSION['user']['tipo'] == '1' || $_SESSION['user']['tipo'] == '3') { ?>
+            <li class="nav-item menuLink">
+              <a class="nav-link " href="#" id="Mesas-Link">
+                <i class="fas fa-chair"></i>
+                Mesas
+              </a>
+            </li>
+          <?php } ?>
+        </ul>
+      </div>
       <form class="m-4" action="./db/logout.php">
-      <button type="submit" class="btn"> <i class="fas fa-sign-out-alt"></i> Sign out</button>
+        <button type="submit" class="btn"> <i class="fas fa-sign-out-alt"></i> Sign out</button>
       </form>
-     
-
-
 
     </nav>
 
@@ -39,52 +107,63 @@ if (isset($_SESSION['user'])) { ?>
                   Dashboard
                 </a>
               </li>
-              <li class="nav-item menuLink">
-                <a class="nav-link" href="#" id="Empresa-Link">
-                  <i class="fas fa-briefcase"></i>
-                  Empresa
-                </a>
-              </li>
-              <li class="nav-item menuLink">
-                <a class="nav-link" href="#" id="Categorias-Link">
-                  <i class="fas fa-list-alt"></i>
-                  Categorías
-                </a>
-              </li>
-              <li class="nav-item menuLink">
-                <a class="nav-link" href="#" id="Productos-Link">
-                  <i class="fas fa-utensils"></i>
-                  Productos
-                </a>
-              </li>
+              <?php if ($_SESSION['user']['tipo'] == '3') { ?>
 
-              <li class="nav-item menuLink">
-                <a class="nav-link" href="#" id="Pedidos-Link">
-                  <i class="fas fa-list"></i>
-                  Pedidos Cocina
-                </a>
-              </li>
+                <li class="nav-item menuLink">
+                  <a class="nav-link" href="#" id="Empresa-Link">
+                    <i class="fas fa-briefcase"></i>
+                    Empresa
+                  </a>
+                </li>
+                <li class="nav-item menuLink">
+                  <a class="nav-link" href="#" id="Categorias-Link">
+                    <i class="fas fa-list-alt"></i>
+                    Categorías
+                  </a>
+                </li>
+                <li class="nav-item menuLink">
+                  <a class="nav-link" href="#" id="Productos-Link">
+                    <i class="fas fa-utensils"></i>
+                    Productos
+                  </a>
+                </li>
+              <?php } ?>
 
-              <li class="nav-item menuLink">
-                <a class="nav-link " href="#" id="Usuarios-Link">
-                  <i class="fas fa-users"></i>
-                  Usuarios
-                </a>
-              </li>
+              <?php if ($_SESSION['user']['tipo'] == '2' || $_SESSION['user']['tipo'] == '3') { ?>
+                <li class="nav-item menuLink">
+                  <a class="nav-link" href="#" id="Pedidos-Link">
+                    <i class="fas fa-list"></i>
+                    Pedidos Cocina
+                  </a>
+                </li>
 
-              <li class="nav-item menuLink">
-                <a class="nav-link " href="#" id="Ticket-Link">
-                  <i class="fas fa-ticket-alt"></i>
-                  Ticket
-                </a>
-              </li>
+              <?php } ?>
+              <?php if ($_SESSION['user']['tipo'] == '3') { ?>
 
-              <li class="nav-item menuLink">
-                <a class="nav-link " href="#" id="Mesas-Link">
-                  <i class="fas fa-chair"></i>
-                  Mesas
-                </a>
-              </li>
+                <li class="nav-item menuLink">
+                  <a class="nav-link " href="#" id="Usuarios-Link">
+                    <i class="fas fa-users"></i>
+                    Usuarios
+                  </a>
+                </li>
+
+                <li class="nav-item menuLink">
+                  <a class="nav-link " href="#" id="Ticket-Link">
+                    <i class="fas fa-ticket-alt"></i>
+                    Ticket
+                  </a>
+                </li>
+              <?php } ?>
+
+
+              <?php if ($_SESSION['user']['tipo'] == '1' || $_SESSION['user']['tipo'] == '3') { ?>
+                <li class="nav-item menuLink">
+                  <a class="nav-link " href="#" id="Mesas-Link">
+                    <i class="fas fa-chair"></i>
+                    Mesas
+                  </a>
+                </li>
+              <?php } ?>
 
             </ul>
 
@@ -246,35 +325,48 @@ if (isset($_SESSION['user'])) { ?>
           </div>
 
           <div id="Empresa">
-            <form>
-              <div class="form-group">
-                <label for="exampleFormControlInput1">Email address</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+            <h1 class="display-4">Datos Empresa</h1>
+            <hr />
+
+            <form class="p-2" id="formEditarEmpresa" idEmpresa=<?= $empresa[0]["idEmpresa"] ?>>
+              <div class="row">
+                <div class="col-md-4 mb-3" style="border-right: 1px solid rgba(44, 44, 44, 0.116);">
+                  <div class="form-group">
+                    <label for="inputNombreEmpresa"><i class="far fa-file-alt"></i>Nombre Empresa</label>
+                    <input type="text" class="form-control" id="inputNombreEmpresa" value='<?= $empresa[0]["nombre"] ?>'>
+                  </div>
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="inputTelefonoEmpresa"><i class="fas fa-phone"></i>Phone</label>
+
+                    <input type="number" id="inputTelefonoEmpresa" class="form-control" value='<?= $empresa[0]["telefono"] ?>' />
+                  </div>
+
+                  <div class="form-outline mb-4">
+                    <label class="form-label" for="inputCifEmpresa"><i class="far fa-id-card"></i>CIF</label>
+
+                    <input type="text" id="inputCifEmpresa" class="form-control" value='<?= $empresa[0]["CIF"] ?>' />
+                  </div>
+                </div>
+
+
+
+
+                <div class="col-md-8 mb-3">
+                  <header class="jumbotron my-4">
+                    <div class="textoJumbotron">
+                      <h1 class="display-5">Aroma Tapas</h1>
+                      <h4>Siempre lo mejor en tu plato.</h4>
+                    </div>
+                  </header>
+
+                </div>
+
               </div>
-              <div class="form-group">
-                <label for="exampleFormControlSelect1">Example select</label>
-                <select class="form-control" id="exampleFormControlSelect1">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="exampleFormControlSelect2">Example multiple select</label>
-                <select multiple class="form-control" id="exampleFormControlSelect2">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="exampleFormControlTextarea1">Example textarea</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-              </div>
+
+
+              <button type="button" class="btn btn-outline-dark btn-lg btn-block" id="guardarDatosEmpresa"> <i class="far fa-save"></i> Guardar</button>
+
+
             </form>
           </div>
 
@@ -316,11 +408,11 @@ if (isset($_SESSION['user'])) { ?>
 
 
               <?php foreach ($categorias as $categoria) { ?>
-                
+
                 <div class="col-md-3 mb-3 text-center categoria ">
 
                   <div class="card" style="width: 18rem;" idCategoria=<?= $categoria["idCategoria"] ?>>
-                    <img class="card-img-top" src=<?= !empty($categoria["imagen"])?'data:image/png;base64,' . $categoria["imagen"]:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1200px-No_image_3x4.svg.png" ?> alt="Card image cap">
+                    <img class="card-img-top" src=<?= !empty($categoria["imagen"]) ? 'data:image/png;base64,' . $categoria["imagen"] : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1200px-No_image_3x4.svg.png" ?> alt="Card image cap">
                     <div class="card-body">
                       <h5 class="card-title"><?= $categoria["nombre"] ?></h5>
                       <hr>
@@ -465,7 +557,7 @@ if (isset($_SESSION['user'])) { ?>
                   <div class="col-md-3 mb-2 text-center p-3 producto" idProducto=<?= $producto["idProducto"] ?>>
 
                     <div class="card" style="width: 18rem;" idCategoria=<?= $producto["idCategoria"] ?>>
-                      <img class="card-img-top" src=<?= !empty($producto["imagen"])?'data:image/png;base64,' . $producto["imagen"]:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1200px-No_image_3x4.svg.png" ?> alt="Card image cap">
+                      <img class="card-img-top" src=<?= !empty($producto["imagen"]) ? 'data:image/png;base64,' . $producto["imagen"] : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1200px-No_image_3x4.svg.png" ?> alt="Card image cap">
                       <div class="card-body">
                         <h5 class="card-title nombreProducto"><?= $producto["nombre"] ?></h5>
                         <hr>
@@ -520,7 +612,7 @@ if (isset($_SESSION['user'])) { ?>
 
                         <div class="form-group col-md-6">
                           <label for="inputNombreProducto"><i class="far fa-edit"></i>Nombre Producto</label>
-                          <input type="text" class="form-control" id="inputNombreProducto">
+                          <input type="text" class="form-control" id="inputNombreProducto" minlength="3" required>
                         </div>
 
                       </div>
@@ -528,10 +620,16 @@ if (isset($_SESSION['user'])) { ?>
                       <div class="form-row">
                         <div class="form-group col-md-12">
                           <label for="inputNombreProducto"><i class="far fa-file-alt"></i>Descripción</label>
-                          <textarea class="form-control" id="inputDescripcionProducto" rows="3"></textarea>
+                          <textarea class="form-control" id="inputDescripcionProducto" rows="3" minlength="3" required></textarea>
                         </div>
                       </div>
 
+                      <div class="form-row">
+                        <div class="form-group col-md-12">
+                          <label for="inputImagenProducto">Imagen del Producto</label>
+                          <input type="file" class="form-control-file" id="inputImagenProducto" name="inputImagenProducto">
+                        </div>
+                      </div>
 
                       <div class="form-row">
                         <div class="form-group col-md-8">
@@ -539,7 +637,7 @@ if (isset($_SESSION['user'])) { ?>
                         <div class="form-group col-md-4">
                           <label for="inputPrecioProducto"> <i class="far fa-money-bill-alt"></i>
                             Precio</label>
-                          <input type="number" class="form-control text-center" id="inputPrecioProducto">
+                          <input type="number" class="form-control text-center" id="inputPrecioProducto" minlength="1" required>
                         </div>
                       </div>
 
@@ -578,7 +676,7 @@ if (isset($_SESSION['user'])) { ?>
 
                         <div class="form-group col-md-12">
                           <label for="inputNombreProducto"><i class="far fa-edit"></i>Nombre Producto</label>
-                          <input type="text" class="form-control" id="inputAnadirNombreProducto">
+                          <input type="text" class="form-control" id="inputAnadirNombreProducto" minlength="3" required>
                         </div>
 
                       </div>
@@ -586,7 +684,7 @@ if (isset($_SESSION['user'])) { ?>
                       <div class="form-row">
                         <div class="form-group col-md-12">
                           <label for="inputNombreProducto"><i class="far fa-file-alt"></i>Descripción</label>
-                          <textarea class="form-control" id="inputAnadirDescripcionProducto" rows="3"></textarea>
+                          <textarea class="form-control" id="inputAnadirDescripcionProducto" rows="3" minlength="3" required></textarea>
                         </div>
                       </div>
 
@@ -604,12 +702,12 @@ if (isset($_SESSION['user'])) { ?>
                         <div class="form-group col-md-4">
                           <label for="inputPrecioProducto"> <i class="far fa-money-bill-alt"></i>
                             Precio</label>
-                          <input type="number" class="form-control text-center" id="inputAnadirPrecioProducto">
+                          <input type="number" class="form-control text-center" id="inputAnadirPrecioProducto" minlength="1" required>
                         </div>
                       </div>
 
 
-              
+
 
                     </form>
 
@@ -697,13 +795,13 @@ if (isset($_SESSION['user'])) { ?>
 
                           <div class="form-group col-md-6">
                             <label for="inputNombreProducto"><i class="far fa-user"></i>Nombre</label>
-                            <input type="text" class="form-control" id="inputEditNombreUsuario">
+                            <input type="text" class="form-control" id="inputEditNombreUsuario" minlength="3" required>
                           </div>
 
 
                           <div class="form-group col-md-6">
                             <label for="inputNombreProducto"><i class="far fa-user"></i>Apellidos</label>
-                            <input type="text" class="form-control" id="inputApellidosUsuario">
+                            <input type="text" class="form-control" id="inputApellidosUsuario" minlength="3" required>
                           </div>
 
                         </div>
@@ -711,7 +809,7 @@ if (isset($_SESSION['user'])) { ?>
                         <div class="form-row">
                           <div class="form-group col-md-12">
                             <label for="inputNombreProducto"><i class="far fa-envelope-open"></i>Email</label>
-                            <input type="email" class="form-control" id="inputEmailUsuario">
+                            <input type="email" class="form-control" id="inputEmailUsuario" minlength="3" required>
                           </div>
                         </div>
 
@@ -761,12 +859,22 @@ if (isset($_SESSION['user'])) { ?>
               <?php
 
               foreach ($mesas as $mesa) { ?>
-                <div class="col-sm-4">
+                <div class="col-lg-6 col-xl-4 col-sm-4">
                   <div class="mesa" mesaEstado=<?= $mesa["estado"] ?> mesaId=<?= $mesa["idMesa"] ?> ticketId=<?= $mesa["idTicket"] ?>>
-                    <?= $mesa["estado"] == 0 ? '<span class="badge badge-success">' : '<span class="badge badge-danger">' ?>
-                    <strong>
-                      <p>Mesa <?= $mesa["idMesa"] ?></p>
-                    </strong><?= $mesa["estado"] == 0 ? "Libre" : "Ocupado" ?></span>
+
+                    <?php if ($mesa["estado"] == 0) { ?>
+                      <form action="./cuentas.php" method="POST" class="text-center">
+                        <input id="mesaId" name="mesaId" type="hidden" value=<?= $mesa["idMesa"] ?>>
+
+                        <button type="submit" class="btn btn-info mt-2 p-3">Crear ticket Mesa <strong> <?= $mesa["idMesa"] ?> </strong> </button>
+                      </form>
+
+                    <?php } else { ?>
+                      <button class="btn btn-danger">Ocupado Mesa <strong> <?= $mesa["idMesa"] ?> </strong> </button>
+
+                    <?php } ?>
+
+
                   </div>
                 </div>
               <?php } ?>
@@ -806,7 +914,7 @@ if (isset($_SESSION['user'])) { ?>
                       <label type="text"> <i class="fas fa-clipboard-list"></i> <strong> Número de ticket </strong> </label>
                     </div>
                     <div class="col-md-3">
-                      <label type="text"> <strong> 4 </strong></label>
+                      <label type="text"> <strong id="mesasTicketId"> 4 </strong></label>
                     </div>
 
                   </div>
@@ -819,7 +927,7 @@ if (isset($_SESSION['user'])) { ?>
                       <label type="text"> <i class="fas fa-chalkboard-teacher"></i> <strong> Atendido por </strong> </label>
                     </div>
                     <div class="col-md-5">
-                      <label type="text"> Manuel Sanchez Ortiz</label>
+                      <label type="text" id="mesasAtendido"></label>
                     </div>
                   </div>
                   <div class="row  mb-1">
@@ -828,7 +936,7 @@ if (isset($_SESSION['user'])) { ?>
                         <strong> En la mesa </strong> </label>
                     </div>
                     <div class="col-md-3">
-                      <label type="text"> 1 </label>
+                      <label type="text" id="mesasId"> </label>
                     </div>
                   </div>
 
@@ -838,7 +946,7 @@ if (isset($_SESSION['user'])) { ?>
                         <strong> Fecha </strong> </label>
                     </div>
                     <div class="col-md-5 ">
-                      <label type="text"> 20/03/2019 : 14:45 </label>
+                      <label type="text" id="mesasFecha"> 20/03/2019 : 14:45 </label>
                     </div>
                   </div>
 
@@ -852,7 +960,7 @@ if (isset($_SESSION['user'])) { ?>
                     </div>
 
                     <div class="col-md-3 text-center ">
-                      <strong>CIF 2452 </strong></label>
+                      <strong id="mesasCIF">CIF 2452 </strong></label>
                     </div>
 
 
@@ -863,7 +971,7 @@ if (isset($_SESSION['user'])) { ?>
                       <label type="text"> <strong> - Nombre </strong> : </label>
                     </div>
                     <div class="col-md-5 text-center ">
-                      <label type="text"> Aroma tapas EP</label>
+                      <label type="text" id="mesasNombreEmpresa"> Aroma tapas EP</label>
                     </div>
                   </div>
 
@@ -872,7 +980,7 @@ if (isset($_SESSION['user'])) { ?>
                       <label type="text"> <strong> - Telefono</strong> : </label>
                     </div>
                     <div class="col-md-3 text-center">
-                      <label type="text"> 242424</label>
+                      <label type="text" id="mesasTelefono"> 242424</label>
                     </div>
                   </div>
 
@@ -880,6 +988,35 @@ if (isset($_SESSION['user'])) { ?>
                   <div class="row ">
                     <div class="col-md-12 ">
                       <label type="text"> <i class="fas fa-receipt"></i> <strong>Cuenta </strong></label>
+
+                      <div>
+                        <div class="table-responsive">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Unidad</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Importe</th>
+                              </tr>
+                            </thead>
+                            <tbody id="tbodyMesasCuenta">
+
+
+                            </tbody>
+                            <tfoot>
+                              <td colspan="3" class="table-Info"><strong> Total </strong> <i class="fas fa-euro-sign"></i> </td>
+                              <td class="table-Info" id="precioMesasTotal"> 55 €</tr>
+                              <td colspan="3"></td>
+                              <td>
+                                <p class="font-weight-light" style="font-size: small;">IVA INCLUIDO</p>
+                              </td>
+
+                            </tfoot>
+                          </table>
+                        </div>
+
+                      </div>
                     </div>
                   </div>
 
@@ -887,10 +1024,24 @@ if (isset($_SESSION['user'])) { ?>
 
 
               </form>
-
             </div>
+
+
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <div class="row">
+                <div class="col-md-6">
+                  <form action="./cuentas.php" method="POST">
+                    <input id="mesasInputId" name="mesasInputId" type="hidden" value="">
+                    <input id="mesasInputTicketId" name="mesasInputTicketId" type="hidden" value="">
+
+                    <button type="submit" class="btn btn-info">Modificar</button>
+                  </form>
+                </div>
+
+                <div class="col-md-6">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -918,7 +1069,7 @@ if (isset($_SESSION['user'])) { ?>
                   <div class="form-group col-md-12">
                     <label for="inputNombreProducto">
                       </i>Número del ticket</label>
-                    <input type="number" class="form-control" id="inputConsultarNumeroTicket">
+                    <input type="number" class="form-control" id="inputConsultarNumeroTicket" required>
                   </div>
 
 
@@ -1081,7 +1232,7 @@ if (isset($_SESSION['user'])) { ?>
 
   </body>
 
-  </html>
+
 <?php } else {
   header("Location: ./index.php");
 }

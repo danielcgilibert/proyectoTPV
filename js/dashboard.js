@@ -15,12 +15,74 @@ $(document).ready(function () {
 
   $(".mesa").on("click", function ({ target }) {
     padre = $(target).closest(".mesa");
-    let mesaid = padre.attr("mesaid");
+    let mesaid = padre.attr("mesaid"); //! Posible fallo consultar por id de mesa
     let ticketid = padre.attr("ticketid");
     let mesaEstado = padre.attr("mesaEstado");
+    console.log(ticketid);
+    console.log(padre);
 
-    $("#modalMesa").modal();
+    if (mesaEstado == 1 && ticketid.length > 0 ) {
+      $.ajax({
+        type: "POST",
+        url: "./db/consultarTicket.php",
+        data: {
+          id: ticketid.trim(),
+        },
+        success: function (data) {
+          $("#tbodyMesasCuenta").empty();
+
+          let datos = JSON.parse(data);
+
+          console.log(datos);
+
+          if (datos.length == 0) {
+            Swal.fire({
+              icon: "error",
+              title: "Ticket no encontrado",
+              footer: "<a href>¿Necesitas ayuda?</a>",
+            });
+          } else {
+            let total = 0;
+            $("#mesasTicketId").text(ticketid.trim());
+            $("#mesasAtendido").text(
+              datos[0]["nombreUsuario"] + " " + datos[0]["apellidosUsuario"]
+            );
+            $("#mesasId").text(datos[0]["idMesa"]);
+            $("#mesasFecha").text(datos[0]["fecha"]);
+            $("#mesasCIF").text(datos[0]["CIF"]);
+            $("#mesasNombreEmpresa").text(datos[0]["nombreEmpresa"]);
+            $("#mesasTelefono").text(datos[0]["telefono"]);
+
+            $("#mesasInputId").val(datos[0]["idMesa"]);
+            $("#mesasInputTicketId").val(ticketid.trim());
+
+            datos.forEach((lineaTicket) => {
+              console.log(lineaTicket);
+              $("#tbodyMesasCuenta").append(
+                `
+                <tr>
+                <th scope="row">${lineaTicket.unidadesPedidas}</th>
+                <td>${lineaTicket.descripcion}</td>
+                <td>${lineaTicket.precio} €</td>
+                <td>${lineaTicket.precio} €</td>
+              </tr>`
+              );
+              total =
+                total +
+                parseFloat(lineaTicket.precio) *
+                  parseFloat(lineaTicket.unidadesPedidas);
+            });
+
+            $("#precioMesasTotal").text(total + " € ");
+            $("#modalMesa").modal();
+          }
+        },
+      });
+    }
+
   });
+
+
   $(".editarProducto").on("click", function ({ target }) {
     padre = $(target).closest(".producto");
 
@@ -40,42 +102,132 @@ $(document).ready(function () {
     inputNombreProducto[0].value = nombreProducto;
     inputDescripcionProducto[0].value = descripcionProducto;
     inputPrecioProducto[0].value = parseInt(precioProducto);
+    var input = document.getElementById("inputImagenProducto");
+    var file = "";
 
     $("#modalProducto").modal();
 
     $("#updateProducto").on("click", (e) => {
       e.stopImmediatePropagation();
 
-      $.ajax({
-        type: "POST",
-        url: "./db/editarProductos.php",
-        data: {
-          id: inputIdProducto[0].value.trim(),
-          nombre: inputNombreProducto[0].value.trim(),
-          descripcion: inputDescripcionProducto[0].value.trim(),
-          precio: inputPrecioProducto[0].value.trim(),
-        },
-        success: function () {
-          padre
-            .find(".nombreProducto")
-            .text(inputNombreProducto[0].value.trim());
-          padre
-            .find(".descripcionProducto")
-            .text(inputDescripcionProducto[0].value.trim());
-          padre
-            .find(".precioProducto")
-            .text(inputPrecioProducto[0].value.trim() + " €");
+      if (
+        inputNombreProducto[0].value.trim().length > 3 &&
+        inputDescripcionProducto[0].value.trim().length > 3 &&
+        inputPrecioProducto[0].value.trim().length > 1
+      ) {
+        var formData = new FormData();
 
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Producto Actualizado",
-            showConfirmButton: false,
-            timer: 1200,
+        formData.append("id", inputIdProducto[0].value.trim());
+        formData.append("nombre", inputNombreProducto[0].value.trim());
+        formData.append(
+          "descripcion",
+          inputDescripcionProducto[0].value.trim()
+        );
+        formData.append("precio", inputPrecioProducto[0].value.trim());
+        formData.append("categoria", categoria);
+
+        file = input.files[0];
+
+        if (file != undefined) {
+          if (!!file.type.match(/image.*/)) {
+            console.log("entra");
+            formData.append("image", file);
+            $.ajax({
+              type: "POST",
+              url: "./db/editarProductos.php",
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function () {
+                padre
+                  .find(".nombreProducto")
+                  .text(inputNombreProducto[0].value.trim());
+                padre
+                  .find(".descripcionProducto")
+                  .text(inputDescripcionProducto[0].value.trim());
+                padre
+                  .find(".precioProducto")
+                  .text(inputPrecioProducto[0].value.trim() + " €");
+
+                Swal.fire({
+                  position: "center",
+                  icon: "success",
+                  title: "Producto Actualizado",
+                  showConfirmButton: false,
+                  timer: 1200,
+                });
+              },
+            });
+            $("#modalProducto").modal("hide");
+          } else {
+            Swal.fire({
+              title: "Error en la extensión",
+              icon: "info",
+              html: `<p>
+                <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Extensiones disponibles</a>
+              </p>
+  
+                          <div class="row">
+                <div class="col">
+                  <div class="collapse multi-collapse" id="multiCollapseExample1">
+                    <div class="card card-body">
+  
+                    <strong>Extensiones permitidas : </strong>
+                    <br/>
+                    <ul class="list-group list-group-flush">
+                    <li class="list-group-item">JPG</li>
+                    <li class="list-group-item">PNG</li>
+                    <li class="list-group-item">RAW</li>
+                    <li class="list-group-item">BMP</li>
+                  </ul>
+                    </div>
+                  </div>
+                </div>
+                          `,
+              showCloseButton: true,
+              showCancelButton: false,
+              focusConfirm: false,
+              confirmButtonText: '<i class="fa fa-thumbs-up"></i> Vale!',
+              confirmButtonAriaLabel: "Ok!",
+            });
+          }
+        } else {
+          $.ajax({
+            type: "POST",
+            url: "./db/editarProductos.php",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function () {
+              padre
+                .find(".nombreProducto")
+                .text(inputNombreProducto[0].value.trim());
+              padre
+                .find(".descripcionProducto")
+                .text(inputDescripcionProducto[0].value.trim());
+              padre
+                .find(".precioProducto")
+                .text(inputPrecioProducto[0].value.trim() + " €");
+
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Producto Actualizado",
+                showConfirmButton: false,
+                timer: 1200,
+              });
+            },
           });
-        },
-      });
-      $("#modalProducto").modal("hide");
+          $("#modalProducto").modal("hide");
+        }
+      } else {
+        Swal.fire({
+          icon: "info",
+          title: "Fallos en la validación",
+          html: `<div class='m-3'> Todos los campos deben estar rellenos y con 3 caracteres como mínimo </div>`,
+          footer: "<a href>¿Necesitas ayuda?</a>",
+        });
+      }
     });
   });
 
@@ -149,17 +301,74 @@ $(document).ready(function () {
         "#modalAnadirProducto #inputAnadirPrecioProducto"
       );
 
-      var formData = new FormData();
-      formData.append("nombre", inputNombreProducto[0].value.trim());
-      formData.append("descripcion", inputDescripcionProducto[0].value.trim());
-      formData.append("precio", inputPrecioProducto[0].value.trim());
-      formData.append("categoria", categoria);
-      file = input.files[0];
+      if (
+        inputNombreProducto[0].value.trim().length > 3 &&
+        inputDescripcionProducto[0].value.trim().length > 3 &&
+        inputPrecioProducto[0].value.trim().length > 1
+      ) {
+        var formData = new FormData();
+        formData.append("nombre", inputNombreProducto[0].value.trim());
+        formData.append(
+          "descripcion",
+          inputDescripcionProducto[0].value.trim()
+        );
+        formData.append("precio", inputPrecioProducto[0].value.trim());
+        formData.append("categoria", categoria);
+        file = input.files[0];
 
-      if (file != undefined) {
+        if (file != undefined) {
+          if (!!file.type.match(/image.*/)) {
+            formData.append("image", file);
+            $.ajax({
+              type: "POST",
+              url: "./db/anadirProductos.php",
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function () {
+                Swal.fire({
+                  position: "center",
+                  icon: "success",
+                  title: "Producto Añadido",
+                  showConfirmButton: false,
+                  timer: 1200,
+                });
+              },
+            });
+            $("#modalAnadirProducto").modal("hide");
+          } else {
+            Swal.fire({
+              title: "Error en la extensión",
+              icon: "info",
+              html: `<p>
+              <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Extensiones disponibles</a>
+            </p>
 
-        if (!!file.type.match(/image.*/)) {
-          formData.append("image", file);
+                        <div class="row">
+              <div class="col">
+                <div class="collapse multi-collapse" id="multiCollapseExample1">
+                  <div class="card card-body">
+
+                  <strong>Extensiones permitidas : </strong>
+                  <br/>
+                  <ul class="list-group list-group-flush">
+                  <li class="list-group-item">JPG</li>
+                  <li class="list-group-item">PNG</li>
+                  <li class="list-group-item">RAW</li>
+                  <li class="list-group-item">BMP</li>
+                </ul>
+                  </div>
+                </div>
+              </div>
+                        `,
+              showCloseButton: true,
+              showCancelButton: false,
+              focusConfirm: false,
+              confirmButtonText: '<i class="fa fa-thumbs-up"></i> Vale!',
+              confirmButtonAriaLabel: "Ok!",
+            });
+          }
+        } else {
           $.ajax({
             type: "POST",
             url: "./db/anadirProductos.php",
@@ -176,62 +385,17 @@ $(document).ready(function () {
               });
             },
           });
+
           $("#modalAnadirProducto").modal("hide");
-
-        }else{
-          Swal.fire({
-            title: "Error en la extensión",
-            icon: "info",
-            html: `<p>
-              <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Extensiones disponibles</a>
-            </p>
-
-                        <div class="row">
-              <div class="col">
-                <div class="collapse multi-collapse" id="multiCollapseExample1">
-                  <div class="card card-body">
-
-                  <strong>Extensiones permitidas : </strong>
-                  <br/>
-                  <ul class="list-group list-group-flush">
-                  <li class="list-group-item">JPG</li>
-                  <li class="list-group-item">PNG</li>
-                  <li class="list-group-item">RAW</li>
-                  <li class="list-group-item">BMP</li>
-                </ul>
-                  </div>
-                </div>
-              </div>
-                        `,
-            showCloseButton: true,
-            showCancelButton: false,
-            focusConfirm: false,
-            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Vale!',
-            confirmButtonAriaLabel: "Ok!",
-          });
         }
       } else {
-        $.ajax({
-          type: "POST",
-          url: "./db/anadirProductos.php",
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function () {
-            Swal.fire({
-              position: "center",
-              icon: "success",
-              title: "Producto Añadido",
-              showConfirmButton: false,
-              timer: 1200,
-            });
-          },
+        Swal.fire({
+          icon: "info",
+          title: "Fallos en la validación",
+          html: `<div class='m-3'> Todos los campos deben estar rellenos y con 3 caracteres como mínimo </div>`,
+          footer: "<a href>¿Necesitas ayuda?</a>",
         });
-
-        $("#modalAnadirProducto").modal("hide");
-
       }
-
     });
   });
 
@@ -247,37 +411,37 @@ $(document).ready(function () {
 
       var input = document.getElementById("inputImagenCategoria");
       var file = input.files[0];
+      if (inputNombreCategoria[0].value.trim().length > 3) {
+        if (file != undefined) {
+          var formData = new FormData();
+          if (!!file.type.match(/image.*/)) {
+            formData.append("image", file);
+            formData.append("nombre", inputNombreCategoria[0].value.trim());
 
-      if (file != undefined) {
-        var formData = new FormData();
-        if (!!file.type.match(/image.*/)) {
-          formData.append("image", file);
-          formData.append("nombre", inputNombreCategoria[0].value.trim());
+            $.ajax({
+              type: "POST",
+              url: "./db/crearCategoria.php",
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function () {
+                Swal.fire({
+                  position: "center",
+                  icon: "success",
+                  title: "Categoria Creada",
+                  showConfirmButton: false,
+                  timer: 1200,
+                });
+              },
+            });
 
-          $.ajax({
-            type: "POST",
-            url: "./db/crearCategoria.php",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function () {
-              Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Categoria Creada",
-                showConfirmButton: false,
-                timer: 1200,
-              });
-            },
-          });
-
-          $("#formCrearCategoria")[0].reset();
-          $("#modalCrearCategoria").modal("hide");
-        } else {
-          Swal.fire({
-            title: "Error en la extensión",
-            icon: "info",
-            html: `<p>
+            $("#formCrearCategoria")[0].reset();
+            $("#modalCrearCategoria").modal("hide");
+          } else {
+            Swal.fire({
+              title: "Error en la extensión",
+              icon: "info",
+              html: `<p>
               <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Extensiones disponibles</a>
             </p>
 
@@ -298,18 +462,27 @@ $(document).ready(function () {
                 </div>
               </div>
                         `,
-            showCloseButton: true,
-            showCancelButton: false,
-            focusConfirm: false,
-            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Vale!',
-            confirmButtonAriaLabel: "Ok!",
+              showCloseButton: true,
+              showCancelButton: false,
+              focusConfirm: false,
+              confirmButtonText: '<i class="fa fa-thumbs-up"></i> Vale!',
+              confirmButtonAriaLabel: "Ok!",
+            });
+          }
+        } else {
+          Swal.fire({
+            position: "center",
+            icon: "info",
+            title: "Por favor introduce una imagen",
+            showConfirmButton: false,
+            timer: 1200,
           });
         }
       } else {
         Swal.fire({
           position: "center",
           icon: "info",
-          title: "Por favor introduce una imagen",
+          title: "La categoria tiene que tener minimo 3 caracteres",
           showConfirmButton: false,
           timer: 1200,
         });
@@ -593,7 +766,7 @@ $(document).ready(function () {
 
     $("#consultarTicket").on("click", (e) => {
       e.stopImmediatePropagation();
-      console.log();
+
       $.ajax({
         type: "POST",
         url: "./db/consultarTicket.php",
@@ -612,7 +785,7 @@ $(document).ready(function () {
             Swal.fire({
               icon: "error",
               title: "Ticket no encontrado",
-              footer: "<a href>Why do I have this issue?</a>",
+              footer: "<a href>¿Necesitas ayuda?</a>",
             });
           } else {
             let total = 0;
@@ -651,5 +824,84 @@ $(document).ready(function () {
       });
       //$("#modalEditarUsuario").modal("hide");
     });
+  });
+
+  $("#guardarDatosEmpresa").on("click", function (e) {
+    let nombreEmpresa = $("#inputNombreEmpresa").val().trim();
+    let telefonoEmpresa = $("#inputTelefonoEmpresa").val().trim();
+    let cifEmpresa = $("#inputCifEmpresa").val().trim();
+    let idEmpresa = $("#formEditarEmpresa").attr("idEmpresa").trim();
+
+    let error = "";
+    let validado = true;
+    var regexTelefono = /^(\+34|0034|34)?[ -]*(6|7)[ -]*([0-9][ -]*){8}$/;
+    var regexCif = /([a-z]|[A-Z]|[0-9])[0-9]{7}([a-z]|[A-Z]|[0-9])/g;
+
+    if (nombreEmpresa.length < 3) {
+      error +=
+        '<i class="fas fa-times"></i>' +
+        " El nombre de la empresa debe ser mayor a tres caracteres <br/>";
+      $("#inputNombreEmpresa").addClass("errorCreacion");
+      $("#inputNombreEmpresa").focus();
+      validado = false;
+    } else {
+      $("#inputNombreEmpresa").removeClass("errorCreacion");
+    }
+
+    if (telefonoEmpresa.length < 3 || !regexTelefono.test(telefonoEmpresa)) {
+      error += `<i class="fas fa-times"></i> Telefono invalido
+     
+  <br/>
+      
+        `;
+      $("#inputTelefonoEmpresa").addClass("errorCreacion");
+      $("#inputTelefonoEmpresa").focus();
+      validado = false;
+    } else {
+      $("#inputTelefonoEmpresa").removeClass("errorCreacion");
+    }
+
+    if (!regexCif.test(cifEmpresa)) {
+      error += `<i class="fas fa-times"></i> CIF invalido
+     
+      <br/>`;
+
+      $("#inputCifEmpresa").addClass("errorCreacion");
+      $("#inputCifEmpresa").focus();
+      validado = false;
+    } else {
+      $("#inputCifEmpresa").removeClass("errorCreacion");
+    }
+
+    if (!validado) {
+      Swal.fire({
+        icon: "info",
+        title: "Fallos en la validación",
+        html: `<div class='m-3'> ${error} </div>`,
+        footer: "<a href>¿Necesitas ayuda?</a>",
+      });
+      e.preventDefault();
+    } else {
+      e.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "./db/editarEmpresa.php",
+        data: {
+          id: idEmpresa,
+          nombreEmpresa,
+          telefonoEmpresa,
+          cifEmpresa,
+        },
+        success: function () {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Empresa Actualizada",
+            showConfirmButton: false,
+            timer: 1200,
+          });
+        },
+      });
+    }
   });
 });
