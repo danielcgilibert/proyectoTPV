@@ -13,9 +13,7 @@
           <li class="nav-item">
             <a class="nav-link" href="./carta.php"> <i class="fas fa-utensils"></i>  Carta</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"> <i class="fas fa-info-circle"></i>  Sobre Nosotros</a>
-          </li>
+
           <li class="nav-item">
             <a class="nav-link" href="./login.php"> <i class="fas fa-sign-in-alt"></i>  Login</a>
           </li>

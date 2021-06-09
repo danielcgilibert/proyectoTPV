@@ -21,7 +21,7 @@ $(document).ready(function () {
     console.log(ticketid);
     console.log(padre);
 
-    if (mesaEstado == 1 && ticketid.length > 0 ) {
+    if (mesaEstado == 1 && ticketid.length > 0) {
       $.ajax({
         type: "POST",
         url: "./db/consultarTicket.php",
@@ -36,10 +36,36 @@ $(document).ready(function () {
           console.log(datos);
 
           if (datos.length == 0) {
-            Swal.fire({
-              icon: "error",
-              title: "Ticket no encontrado",
-              footer: "<a href>¿Necesitas ayuda?</a>",
+            $.ajax({
+              type: "POST",
+              url: "./db/consultarTicketVacio.php",
+              data: {
+                id: ticketid.trim(),
+              },
+              success: function (results) {
+                let datosTickeVacio = JSON.parse(results);
+                let total = 0;
+                console.log(datosTickeVacio);
+                $("#mesasTicketId").text(ticketid.trim());
+                $("#mesasAtendido").text(
+                  datosTickeVacio[0]["nombreUsuario"] +
+                    " " +
+                    datosTickeVacio[0]["apellidosUsuario"]
+                );
+                $("#mesasId").text(datosTickeVacio[0]["idMesa"]);
+                $("#mesasFecha").text(datosTickeVacio[0]["fecha"]);
+                $("#mesasCIF").text(datosTickeVacio[0]["CIF"]);
+                $("#mesasNombreEmpresa").text(
+                  datosTickeVacio[0]["nombreEmpresa"]
+                );
+                $("#mesasTelefono").text(datosTickeVacio[0]["telefono"]);
+
+                $("#mesasInputId").val(datosTickeVacio[0]["idMesa"]);
+                $("#mesasInputTicketId").val(ticketid.trim());
+
+                $("#precioMesasTotal").text(0 + " € ");
+                $("#modalMesa").modal();
+              },
             });
           } else {
             let total = 0;
@@ -64,7 +90,10 @@ $(document).ready(function () {
                 <th scope="row">${lineaTicket.unidadesPedidas}</th>
                 <td>${lineaTicket.descripcion}</td>
                 <td>${lineaTicket.precio} €</td>
-                <td>${lineaTicket.precio} €</td>
+                <td>${
+                  parseInt(lineaTicket.precio) *
+                  parseInt(lineaTicket.unidadesPedidas)
+                } €</td>
               </tr>`
               );
               total =
@@ -79,9 +108,7 @@ $(document).ready(function () {
         },
       });
     }
-
   });
-
 
   $(".editarProducto").on("click", function ({ target }) {
     padre = $(target).closest(".producto");
@@ -650,6 +677,7 @@ $(document).ready(function () {
     inputEditNombreUsuario.value = NombreUsuario;
     inputApellidosUsuario.value = ApellidosUsuario;
     inputEmailUsuario.value = emailUsuario;
+    inputPasswordUsuario.value = "";
 
     if (perfilUsuario == "1") {
       $("#camarero").attr("selected", true);
@@ -661,56 +689,149 @@ $(document).ready(function () {
 
     $("#editarUsuario").on("click", (e) => {
       e.stopImmediatePropagation();
-      console.log(perfilUsuario);
+      Swal.fire({
+        title: '¿Quieres cambiar la contraseña?',
+        text: "Si pulsa el botón cancelar se guardaran todos los datos menos la contraseña",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            type: "POST",
+            url: "./db/editarUsuario.php",
+            data: {
+              id: IdUsuario,
+              NombreUsuario: inputEditNombreUsuario.value.trim(),
+              ApellidosUsuario: inputApellidosUsuario.value.trim(),
+              emailUsuario: inputEmailUsuario.value.trim(),
+              perfilUsuario: inputEditTipoUsuario.value.trim(),
+              contrasenaUsuario: inputPasswordUsuario.value.trim(),
+            },
+            success: function (data) {
+              if (data == 0) {
+                padre
+                  .find(".card-title")
+                  .text(inputEditNombreUsuario.value.trim());
+                padre.attr("perfilUsuario", inputEditTipoUsuario.value.trim());
+  
+                $("#camarero").removeAttr("selected");
+                $("#cocinero").removeAttr("selected");
+                $("#gerente").removeAttr("selected");
+  
+                if (padre.attr("perfilUsuario") == "1") {
+                  padre.find(".tipoPerfil").text("Camarero");
+                  $("#camarero").attr("selected", true);
+                } else if (padre.attr("perfilUsuario") == "2") {
+                  padre.find(".tipoPerfil").text("Cocinero");
+                  $("#cocinero").attr("selected", true);
+                } else {
+                  padre.find(".tipoPerfil").text("Gerente");
+                  $("#gerente").attr("selected", true);
+                }
+  
+                padre.find(".emailUsuario").text(inputEmailUsuario.value.trim());
+                padre
+                  .find(".nombreUsuario")
+                  .text(inputEditNombreUsuario.value.trim());
+                padre
+                  .find(".apellidosUsuario")
+                  .text(inputApellidosUsuario.value.trim());
+  
+                console.log(inputEditTipoUsuario.value.trim());
+                Swal.fire({
+                  position: "center",
+                  icon: "success",
+                  title: "Usuario Actualizado",
+                  showConfirmButton: false,
+                  timer: 1200,
+                });
 
-      $.ajax({
-        type: "POST",
-        url: "./db/editarUsuario.php",
-        data: {
-          id: IdUsuario,
-          NombreUsuario: inputEditNombreUsuario.value.trim(),
-          ApellidosUsuario: inputApellidosUsuario.value.trim(),
-          emailUsuario: inputEmailUsuario.value.trim(),
-          perfilUsuario: inputEditTipoUsuario.value.trim(),
-        },
-        success: function () {
-          padre.find(".card-title").text(inputEditNombreUsuario.value.trim());
-          padre.attr("perfilUsuario", inputEditTipoUsuario.value.trim());
-
-          $("#camarero").removeAttr("selected");
-          $("#cocinero").removeAttr("selected");
-          $("#gerente").removeAttr("selected");
-
-          if (padre.attr("perfilUsuario") == "1") {
-            padre.find(".tipoPerfil").text("Camarero");
-            $("#camarero").attr("selected", true);
-          } else if (padre.attr("perfilUsuario") == "2") {
-            padre.find(".tipoPerfil").text("Cocinero");
-            $("#cocinero").attr("selected", true);
-          } else {
-            padre.find(".tipoPerfil").text("Gerente");
-            $("#gerente").attr("selected", true);
-          }
-
-          padre.find(".emailUsuario").text(inputEmailUsuario.value.trim());
-          padre
-            .find(".nombreUsuario")
-            .text(inputEditNombreUsuario.value.trim());
-          padre
-            .find(".apellidosUsuario")
-            .text(inputApellidosUsuario.value.trim());
-
-          console.log(inputEditTipoUsuario.value.trim());
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Usuario Actualizado",
-            showConfirmButton: false,
-            timer: 1200,
+                $("#modalEditarUsuario").modal("hide");
+              } else {
+                let fallo = "";
+                data == 1 ? fallo = "Contraseña minimo con 8 caracteres" : "";
+                if (data == 2) {
+                  fallo = `
+                  <i class="fas fa-times"></i> Contraseña invalida :
+                  <ul class='list-group'>
+                  <li class="list-group-item">Mínimo ocho caracteres</li>
+                  <li class="list-group-item">Debe contener al menos una mayúscula</li>
+                  <li class="list-group-item">Debe contener al menos una minúscula</li>
+                  <li class="list-group-item">Debe contener al menos un dígito</li>
+              </ul>  
+                  `;
+                }
+                data == 3 ? (fallo = "fallo en el update de la base de datos") : "";
+                data == 4 ? (fallo = "email ya existe") : "";
+  
+                Swal.fire({
+                  icon: "error",
+                  html: `${fallo}`,
+                  footer: "<a href>¿Necesitas ayuda?</a>",
+                });
+              }
+            },
           });
-        },
-      });
-      $("#modalEditarUsuario").modal("hide");
+        }else{
+          $.ajax({
+            type: "POST",
+            url: "./db/editarUsuario.php",
+            data: {
+              id: IdUsuario,
+              NombreUsuario: inputEditNombreUsuario.value.trim(),
+              ApellidosUsuario: inputApellidosUsuario.value.trim(),
+              emailUsuario: inputEmailUsuario.value.trim(),
+              perfilUsuario: inputEditTipoUsuario.value.trim(),
+            },
+            success: function (data) {
+              if (data == 0) {
+                padre
+                  .find(".card-title")
+                  .text(inputEditNombreUsuario.value.trim());
+                padre.attr("perfilUsuario", inputEditTipoUsuario.value.trim());
+  
+                $("#camarero").removeAttr("selected");
+                $("#cocinero").removeAttr("selected");
+                $("#gerente").removeAttr("selected");
+  
+                if (padre.attr("perfilUsuario") == "1") {
+                  padre.find(".tipoPerfil").text("Camarero");
+                  $("#camarero").attr("selected", true);
+                } else if (padre.attr("perfilUsuario") == "2") {
+                  padre.find(".tipoPerfil").text("Cocinero");
+                  $("#cocinero").attr("selected", true);
+                } else {
+                  padre.find(".tipoPerfil").text("Gerente");
+                  $("#gerente").attr("selected", true);
+                }
+  
+                padre.find(".emailUsuario").text(inputEmailUsuario.value.trim());
+                padre
+                  .find(".nombreUsuario")
+                  .text(inputEditNombreUsuario.value.trim());
+                padre
+                  .find(".apellidosUsuario")
+                  .text(inputApellidosUsuario.value.trim());
+  
+                console.log(inputEditTipoUsuario.value.trim());
+                Swal.fire({
+                  position: "center",
+                  icon: "success",
+                  title: "Usuario Actualizado",
+                  showConfirmButton: false,
+                  timer: 1200,
+                });
+                $("#modalEditarUsuario").modal("hide");
+              }
+            },
+          });
+        }
+      })
+        
+  
     });
   });
 
@@ -763,6 +884,7 @@ $(document).ready(function () {
   $(".listarTicket").on("click", function ({ target }) {
     $("#modalConsultarTicket").modal();
     $("#mostrarTicket").hide();
+    $(".botonImprimir").remove();
 
     $("#consultarTicket").on("click", (e) => {
       e.stopImmediatePropagation();
@@ -776,6 +898,7 @@ $(document).ready(function () {
         success: function (data) {
           $("#mostrarTicket").hide();
           $("#tbodyCuenta").empty();
+          $(".botonImprimir").remove();
 
           let datos = JSON.parse(data);
 
@@ -817,7 +940,23 @@ $(document).ready(function () {
             });
 
             $("#precioTotal").text(total + " € ");
+            $(".footerConsultarTicket").prepend(`
+            <form action="./generarPdf.php" method="post" target="_blank" class="botonImprimir">
+            <button type="submit" class="btn btn-info mt-3" style="padding: 10px !important;" > <i class="far fa-file-pdf"></i> </button>
+            <input type="hidden" name="idTicket" value=${inputConsultarNumeroTicket.value.trim()} />
+            <input type="hidden" name="nombreUsuario" value= ${
+              datos[0]["nombreUsuario"]
+            } />
+            <input type="hidden" name="apellidoUsuario" value="${
+              datos[0]["apellidosUsuario"]
+            }" />
+            <input type="hidden" name="fecha" value="${datos[0]["fecha"]}" />
 
+            <input type="hidden" name="idMesa" value=${datos[0]["idMesa"]} />
+        </form>
+
+
+            `);
             $("#mostrarTicket").show();
           }
         },
@@ -903,5 +1042,43 @@ $(document).ready(function () {
         },
       });
     }
+  });
+
+  let idLinea = 0;
+  let card = "";
+  $(".finalizarPedido").on("click", function ({ target }) {
+    padre = $(target).closest(".pedidoFila");
+    card = $(target).closest(".pedidoCocina");
+    idLinea = $(target).attr("idLineaTicket");
+
+    $.ajax({
+      type: "POST",
+      url: "./db/finalizarPedido.php",
+      data: {
+        idLinea: idLinea,
+      },
+      success: function (data) {
+        if (data) {
+          card.addClass("bg-success");
+          card.removeClass("bg-light");
+
+          padre.removeClass("pedidoFila");
+
+          padre
+            .find(".textoPedidoPendiente")
+            .removeClass("textoPedidoPendiente");
+          padre
+            .find(".fechaPedidoPendiente")
+            .removeClass("fechaPedidoPendiente");
+
+          padre.find(".card-text").addClass("textoPedidoFinalizado");
+          padre.find(".card-text").addClass("fechaPedidoFinalizado");
+
+          $(target).remove();
+
+          $(".pedidosFinalizados").prepend(padre);
+        }
+      },
+    });
   });
 });

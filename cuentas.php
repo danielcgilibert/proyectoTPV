@@ -3,20 +3,17 @@
 session_start();
 require('head.php');
 require_once "./db/database.php";
-
 if (isset($_SESSION['user'])) { ?>
     <?php
 
     $categorias = cargar_categorias();
-    print_r($_REQUEST);
-    print_r($_SESSION['user']);
     $numeroTicket = "";
-    $nuevo=0; //Si es un ticket nuevo o ya crado 0=nuevo 1=creado
+    $nuevo = 0; //Si es un ticket nuevo o ya crado 0=nuevo 1=creado
 
 
     if (!isset($_REQUEST["mesasInputTicketId"])) {
-        $nuevo=0;
-        $numeroTicket = ultimo_ticket() + 1;
+        $nuevo = 0;
+        $numeroTicket = ultimo_ticket()==null? 1 :ultimo_ticket() + 1;
         $fecha = getdate();
 
         $dia = $fecha["mday"];
@@ -27,7 +24,7 @@ if (isset($_SESSION['user'])) { ?>
         $fecha = $dia . '/' . $mes . '/' . $anno . ' : ' . $hora . ':' . $minutos;
         $medaId = $_REQUEST["mesaId"];
     } else {
-        $nuevo=1;
+        $nuevo = 1;
         $numeroTicket = $_REQUEST["mesasInputTicketId"];
         $ticket = cargar_ticket($numeroTicket);
         $fecha = $ticket[0]["fecha"];
@@ -43,32 +40,32 @@ if (isset($_SESSION['user'])) { ?>
 
     <body>
         <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-            <a class="navbar-brand col-sm-3 col-md-2 mr-0" style="color: white;">Aroma Tapas</a>
-            <form class="m-4" action="./admin.php">
-                <button type="submit" class="btn"> <i class="fas fa-sign-out-alt"></i> Cancelar</button>
+            <a class="navbar-brand col-sm-3 col-md-2 mr-0 nombreEmpresa" style="color: white;">Aroma Tapas</a>
+            <form class="m-4" action="./admin.php" >
+                <button type="submit" class="btn"> <i class="fas fa-sign-out-alt"></i> Volver </button>
             </form>
         </nav>
 
 
         <div class="container-fluid">
-
             <div class="row">
                 <div class="col-md-6">
-                    <form class="p-4">
+                    <div class="formTicket p-4">
+
                         <div class="table-responsive">
                             <table class="table">
                                 <tbody>
 
                                     <tr>
                                         <th scope="row"> <label type="text"> <i class="fas fa-clipboard-list"></i> <strong> Número de ticket </strong> </label></th>
-                                        <td class="text-center"> <label type="text"> <strong> <span nuevo=<?=$nuevo?> class="badge badge-pill badge-info px-5 pt-2 text-center numeroTicket" style="border: 3px solid #1985BF;">
+                                        <td class="text-center"> <label type="text"> <strong> <span nuevo=<?= $nuevo ?> class="badge badge-pill badge-info px-5 pt-2 text-center numeroTicket" style="border: 3px solid #1985BF;">
                                                         <h4><?= $numeroTicket ?> </h4>
                                                     </span> </strong></label></td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row"> <label type="text"> <i class="fas fa-chalkboard-teacher"></i> <strong> Atendido por </strong> </label></th>
-                                        <td class="text-center"> <label type="text" class="usuario" idUsuario=<?= $_SESSION['user']["id"] ?>> <?= $_SESSION['user']["nombre"] ?> </label></td>
+                                        <td class="text-center"> <label type="text" class="usuario" idUsuario=<?= $_SESSION['user']["id"] ?>> <?= $_SESSION['user']["nombre"]  ?> </label></td>
 
                                     </tr>
 
@@ -106,7 +103,7 @@ if (isset($_SESSION['user'])) { ?>
 
                                         </th>
                                         <td class="text-center">
-                                            <strong>CIF 2452 </strong></label>
+                                            <strong class="cif">CIF 2452 </strong></label>
 
                                         </td>
 
@@ -130,7 +127,7 @@ if (isset($_SESSION['user'])) { ?>
 
                                         </th>
                                         <td class="text-center" style="border:none !important">
-                                            <label type="text"> 242424</label>
+                                            <label type="text" class="telefono"> 242424</label>
 
                                         </td>
 
@@ -138,8 +135,9 @@ if (isset($_SESSION['user'])) { ?>
 
                                     <tr>
                                         <th scope="row" colspan="2">
-                                            <label type="text"> <i class="fas fa-receipt"></i> <strong>Cuenta </strong></label>
+                                            <label type="text"> <i class="fas fa-receipt"></i> <strong>Cuenta </strong> </label>
                                         </th>
+                                        
                                     </tr>
                                 </tbody>
 
@@ -183,20 +181,25 @@ if (isset($_SESSION['user'])) { ?>
                                             <th scope="col">Nombre</th>
                                             <th scope="col">Precio</th>
                                             <th scope="col">Importe</th>
+                                            <th scope="col"></th>
 
                                         </tr>
+                                        
                                     </thead>
                                     <tbody id="tbodyCuenta">
+                                  
                                         <?php foreach ($lineas as $linea) { ?>
-                                            <tr idProducto=<?=$linea["idProducto"] ?> idLinea=<?= $linea["idLinea"] ?>>
-                                                <th scope="row"><?= $linea["unidadesPedidas"] ?></th>
-                                                <td><?= $linea["descripcion"] ?></td>
+                                            <tr idProducto=<?= $linea["idProducto"] ?> idLinea=<?= $linea["idLinea"] ?>>
+                                                <th scope="row" class="unidadesPedidas"><?= $linea["unidadesPedidas"] ?></th>
+                                                <td><?= $linea["nombre"] ?></td>
                                                 <td><?= $linea["precio"] ?> €</td>
-                                                <td><?= (floatval($linea["precio"] * floatval($linea["unidadesPedidas"])))  ?> €</td>
+                                                <td class="importe"><?= (floatval($linea["precio"] * floatval($linea["unidadesPedidas"])))  ?> €</td>
                                                 <?php $total = $total + (floatval($linea["precio"] * floatval($linea["unidadesPedidas"])))  ?>
                                                 <td>
                                                     <button type="button" class="btn btn-outline-success anadirTicket"><i class="far fa-plus-square"></i></button>
-                                                    <button type="button" class="btn btn-outline-danger borrarLinea"><i class="far fa-trash-alt"></i></button>
+                                                    <button type="button" class="btn btn-outline-danger eliminarLinea"><i class="far fa-trash-alt"></i></button>
+                                                    <button type="button" class="btn btn-outline-info editLinea"><i class="far fa-edit"></i></button>
+
                                                 </td>
                                             </tr>
                                         <?php } ?>
@@ -205,7 +208,7 @@ if (isset($_SESSION['user'])) { ?>
                                     </tbody>
                                     <tfoot>
                                         <td colspan="3" class="table-Info"><strong> Total </strong> <i class="fas fa-euro-sign"></i> </td>
-                                        <td class="table-Info" id="precioTotal"> <strong><?= $total ?> € </strong> </td>
+                                        <td class="table-Info" > <strong id="precioTotal"><?= $total ?> € </strong> </td>
                                         </tr>
                                         <td colspan="3"></td>
                                         <td>
@@ -219,27 +222,45 @@ if (isset($_SESSION['user'])) { ?>
                             </div>
 
                         <?php  } ?>
+                        <div class="row mb-2">
+                            <div class="col-md-12">
 
+                            <button type="button" class="btn btn-info informacionPOP" style="float: right; width: 150px" data-container="body" data-toggle="popover" data-placement="left">
+                            Información <i class="far fa-question-circle"></i></button>
+
+                            </div>
+
+                        </div>
                         <div class="row">
 
                             <div class="col-md-12">
 
-                                <button type="button" style="float: right !important;" class="btn btn-primary continuarBoton"> Continuar <i class="fas fa-forward ml-2"></i> </button>
-
+                                <button type="button" style="float: right !important; width: 150px" class="btn btn-primary continuarBoton"> Continuar <i class="fas fa-forward ml-2"></i> </button>
+                              
                             </div>
 
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-12">
-                                <button type="button" style="float: right !important;" class="btn btn-success"> Cobrar <i class="far fa-credit-card ml-2"></i> </button>
+                            <form action="./generarPdf.php" method="post" target="_blank" id="formCobrar">
+                                <button type="submit" style="float: right !important; width: 150px" class="btn btn-success cobrarTicket"> Cobrar <i class="far fa-credit-card ml-2"></i> </button>
+                                <input type="hidden" name="idTicket" value=<?= $numeroTicket ?> style="display: none;" />
+                                <input type="hidden" name="nombreUsuario" value= <?= $_SESSION['user']["nombre"]  ?> style="display: none;" />
+                                <input type="hidden" name="apellidoUsuario" value="<?= $_SESSION['user']["apellidos"] ?>" style="display: none;" />
+                                <input type="hidden" name="fecha" value="<?= $fecha ?>" style="display: none;" />
 
+                                <input type="hidden" name="idMesa" value=<?= $medaId ?> style="display: none;" />
+                            </form>
                             </div>
 
                         </div>
 
+                
 
 
-                    </form>
+
+
+                    </div>
                 </div>
 
 
@@ -250,6 +271,7 @@ if (isset($_SESSION['user'])) { ?>
                         <div class="card">
                             <div class="card-header text-center" id="headingOne" style="background-color: white !important;">
                                 <h5 class="mb-0">
+
                                     <button class="btn btn-outline-info btn-lg btn-block" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                         Categorías
                                     </button>

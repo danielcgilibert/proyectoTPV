@@ -7,7 +7,7 @@ require('head.php');
 
 
     <div class="registration-form animate__animated animate__backInDown">
-        <form id="formCrearUsuario" action="db/crearUsuario.php" method="POST">
+        <form id="formCrearUsuario" action="db/crearUsuario.php" method="POST" accept-charset="utf-8">
             <div class="form-icon">
                 <span> <i class="fas fa-user icono"> </i> </span>
             </div>

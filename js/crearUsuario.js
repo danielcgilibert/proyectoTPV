@@ -45,6 +45,28 @@ $(document).ready(function () {
 
     var regexPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
 
+   
+
+    if (password1.length < 3 || !regexPassword.test(password1)) {
+      error += `<i class="fas fa-times"></i> Contraseña invalida :
+   
+      <ul class='list-group'>
+      <li class="list-group-item">Mínimo ocho caracteres</li>
+      <li class="list-group-item">Debe contener al menos una mayúscula</li>
+      <li class="list-group-item">Debe contener al menos una minúscula</li>
+      <li class="list-group-item">Debe contener al menos un dígito</li>
+  </ul>      
+  </div>
+  <br/>
+      
+        `;
+      $("#passwordRegistro").addClass("errorCreacion");
+      $("#passwordRegistro").focus();
+      validado = false;
+    } else {
+      $("#passwordRegistro").removeClass("errorCreacion");
+    }
+
     if (
       password2.length < 3 ||
       password2.localeCompare(password1) != 0 ||
@@ -56,30 +78,6 @@ $(document).ready(function () {
       validado = false;
     } else {
       $("#passwordRegistro2").removeClass("errorCreacion");
-    }
-
-    if (password1.length < 3 || !regexPassword.test(password1)) {
-      error += `<i class="fas fa-times"></i> Contraseña invalida :
-        <a class="pointer" style="border-bottom: 1px solid blue;" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-        Información </a>
-   
-    <div class="collapse" id="collapseExample">
-      <div class="card card-body">
-      <ul class='text-left'>
-      <li>Mínimo ocho caracteres</li>
-      <li>Debe contener al menos una mayúscula</li>
-      <li>Debe contener al menos una minúscula</li>
-      <li>Debe contener al menos un dígito</li>
-  </ul>      
-  </div>
-  <br/>
-      
-        `;
-      $("#passwordRegistro").addClass("errorCreacion");
-      $("#passwordRegistro").focus();
-      validado = false;
-    } else {
-      $("#passwordRegistro").removeClass("errorCreacion");
     }
 
     if (!validado) {

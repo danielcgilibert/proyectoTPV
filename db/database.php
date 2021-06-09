@@ -184,3 +184,47 @@ while ($filas = mysqli_fetch_assoc($resul)) {
 return $filaNuevas;
 
 }
+
+function cargar_lineas_pedidos()
+{
+	include 'conexion.php'; 
+
+	$bd = mysqli_connect($host, $usuario, $contrasenia, $baseDatos);
+	$ins = "SELECT * FROM `lineaticket` INNER JOIN producto ON lineaticket.idProducto=producto.idProducto INNER JOIN ticket ON lineaticket.idTicket=ticket.idTicket ORDER BY fecha ASC";
+	$resul = mysqli_query($bd, $ins);
+
+	if (!$resul) {
+		return FALSE;
+	}
+
+	$listaTicketPedido = array();
+
+	while ($fila = mysqli_fetch_assoc($resul)) {
+		$listaTicketPedido[] = $fila;
+	}
+    
+	//si hay 1 o más
+	return $listaTicketPedido;
+}
+
+function productos_mas_vendidos()
+{
+	include 'conexion.php'; 
+
+	$bd = mysqli_connect($host, $usuario, $contrasenia, $baseDatos);
+	$ins = "select producto.nombre,lineaticket.idProducto, count(*) from lineaticket INNER JOIN producto ON producto.idProducto=lineaticket.idProducto group by lineaticket.idProducto ORDER BY `count(*)` DESC LIMIT 10";
+	$resul = mysqli_query($bd, $ins);
+
+	if (!$resul) {
+		return FALSE;
+	}
+
+	$listaProductosVendidos = array();
+
+	while ($fila = mysqli_fetch_assoc($resul)) {
+		$listaProductosVendidos[] = $fila;
+	}
+    
+	//si hay 1 o más
+	return $listaProductosVendidos;
+}

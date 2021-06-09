@@ -1,43 +1,132 @@
-@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
 
+@media only screen and (max-width: 600px) {
+  .index{
+    margin-top: 20%;
+    background-color: white;
+    border-left: 5px solid rgba(164, 196, 245, 0.562);
+    border-right: 5px solid rgba(164, 196, 245, 0.562);
+  width: 100% !important;
+  }
+
+ 
+
+  .index .card {
+    height: 50% !important;
+    margin-top: 12px;
+    font-size: 14px;
+    text-align: center;
+    padding-bottom: 15px;
+  }
+}
 
 body {
-    margin: 0px;
-    font-family: 'Roboto', sans-serif !important;
+  margin: 0px;
+  font-family: "Open Sans", sans-serif !important;
 }
 
-.portada{
-  padding: 57px;
+.portada {
+  margin-top: 9% !important;
 }
-  .jumbotron{
-      background-image: url("https://cdn.atrapalo.com/common/photo/res/51759/0/ticr_890_370.jpg") ;
-  }
 
-  .textoJumbotron .display-3{
-    font-family: 'Julius Sans One', sans-serif;
-  }
+.card {
+  transition: 0.2s;
+}
+.index{
+  background-color: white;
+  border-left: 5px solid rgba(164, 196, 245, 0.562);
+  border-right: 5px solid rgba(164, 196, 245, 0.562);
+  -webkit-box-shadow: -1px 9px 17px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: -1px 9px 17px 0px rgba(0,0,0,0.75);
+  box-shadow: -1px 9px 17px 0px rgba(0,0,0,0.75);
+  border-radius: 35px;
+  padding: 20px;
+  padding-left: 50px;
+  padding-right: 50px;
 
-  .textoJumbotron {
+}
+.fondo {
+  background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
 
-    background-color: rgba(26, 25, 25, 0.76);
-    font-weight: bold;
-    border-radius: 15px;
-    border: 3px solid rgb(255, 255, 255);
-    padding: 15px;
-    color: white;
-  }
+}
+
+h2 { margin-top: 35px !important; color:#000000; font-family: 'Open Sans',sans-serif; font-size: 30px; font-weight: 800; line-height: 36px; margin: 0 0 24px; text-align: center; }
+.index .card:hover {
+  font-size: 105%;
+
+  background: rgb(255, 255, 255);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(244, 251, 253, 0.185) 90%
+  );
+  font-weight: 200;
+  border: 3px solid rgba(61, 145, 255, 0.26);
+
+  -webkit-box-shadow: 7px 7px 15px 0px rgba(50, 50, 50, 0.78);
+  -moz-box-shadow: 7px 7px 15px 0px rgba(50, 50, 50, 0.78);
+  box-shadow: 7px 7px 15px 0px rgba(50, 50, 50, 0.78);
+}
+
+
+.imagenGrande {
+  min-width: 100% !important;
+  transition: 0.5s;
+}
+.index .imagenGrande:hover {
+  min-width: 105% !important;
+}
+
+.jumbotron {
+  border-radius: 25px;
+  -webkit-box-shadow: -1px 9px 17px -9px rgba(0,0,0,1);
+  -moz-box-shadow: -1px 9px 17px -9px rgba(0,0,0,1);
+  box-shadow: -1px 9px 17px -9px rgba(0,0,0,1);
+  background-image: url("https://cdn.atrapalo.com/common/photo/res/51759/0/ticr_890_370.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   
-
-
-
-.cardFood{
-
-    border: 0px solid #000000;
-    transition: 0.3s linear; 
+  background-color: #ffffff;
+  background-repeat: no-repeat;
 }
 
-.cardFood:hover{
+.textoJumbotron .display-3 {
+  font-family: "Julius Sans One", sans-serif;
+}
 
-    transform: scale(1.1);
+.portada {
+  padding-left: 120px;
+  padding-right: 120px;
+  padding-bottom: 120px;
+}
+
+.textoJumbotron {
+  background-color: rgba(26, 25, 25, 0.76);
+  font-weight: bold;
+  border-radius: 25px;
+  border: 3px solid rgb(255, 255, 255);
+  padding: 15px;
+  color: white;
+}
+
+.platos img {
+  width: 95%;
+  border: 3px solid rgba(255, 255, 255, 0.705);
+  -webkit-box-shadow: -1px 9px 17px 0px rgba(0,0,0,0.16);
+-moz-box-shadow: -1px 9px 17px 0px rgba(0,0,0,0.16);
+box-shadow: -1px 9px 17px 0px rgba(0,0,0,0.16);
+
+  transition: 0.3s linear;
+}
+
+.platos img:hover {
+  border: 5px solid rgba(255, 255, 255, 0.705);
+  -webkit-box-shadow: 7px 7px 15px 0px rgba(50, 50, 50, 0.78);
+  -moz-box-shadow: 7px 7px 15px 0px rgba(50, 50, 50, 0.78);
+  box-shadow: 7px 7px 15px 0px rgba(50, 50, 50, 0.78);
+  transform: scale(1.1);
+  font-size: 0%;
 }

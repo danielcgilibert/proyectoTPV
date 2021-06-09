@@ -10,13 +10,14 @@ $mesas = cargar_mesas();
 $categorias = cargar_categorias();
 $usuarios = cargar_usuarios();
 $empresa = cargar_empresa();
+$productosMasVendidos = productos_mas_vendidos();
 foreach ($categorias as $categoria) {
   $productosCa[$categoria["nombre"]] = cargar_productos($categoria["idCategoria"]);
 }
-
+$lineaTicketPedidos = cargar_lineas_pedidos();
 if (isset($_SESSION['user'])) { ?>
 
-  <body>
+  <body class="animate__animated animate__fadeIn">
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" style="color: white;">Aroma Tapas</a>
       <button class="navbar-toggler d-block d-sm-block d-md-none" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -25,7 +26,7 @@ if (isset($_SESSION['user'])) { ?>
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav">
           <li class="nav-item menuLink">
-            <a class="nav-link active" href="#" id="dashboard-Link">
+            <a class="nav-link active" href="#" id="dashboard-Burger-Link">
               <i class="fas fa-home"></i>
               Dashboard
             </a>
@@ -33,19 +34,19 @@ if (isset($_SESSION['user'])) { ?>
           <?php if ($_SESSION['user']['tipo'] == '3') { ?>
 
             <li class="nav-item menuLink">
-              <a class="nav-link" href="#" id="Empresa-Link">
+              <a class="nav-link" href="#" id="Empresa-Burger-Link">
                 <i class="fas fa-briefcase"></i>
                 Empresa
               </a>
             </li>
             <li class="nav-item menuLink">
-              <a class="nav-link" href="#" id="Categorias-Link">
+              <a class="nav-link" href="#" id="Categorias-Burger-Link">
                 <i class="fas fa-list-alt"></i>
                 Categorías
               </a>
             </li>
             <li class="nav-item menuLink">
-              <a class="nav-link" href="#" id="Productos-Link">
+              <a class="nav-link" href="#" id="Productos-Burger-Link">
                 <i class="fas fa-utensils"></i>
                 Productos
               </a>
@@ -54,7 +55,7 @@ if (isset($_SESSION['user'])) { ?>
 
           <?php if ($_SESSION['user']['tipo'] == '2' || $_SESSION['user']['tipo'] == '3') { ?>
             <li class="nav-item menuLink">
-              <a class="nav-link" href="#" id="Pedidos-Link">
+              <a class="nav-link" href="#" id="Pedidos-Burger-Link">
                 <i class="fas fa-list"></i>
                 Pedidos Cocina
               </a>
@@ -64,14 +65,14 @@ if (isset($_SESSION['user'])) { ?>
           <?php if ($_SESSION['user']['tipo'] == '3') { ?>
 
             <li class="nav-item menuLink">
-              <a class="nav-link " href="#" id="Usuarios-Link">
+              <a class="nav-link " href="#" id="Usuarios-Burger-Link">
                 <i class="fas fa-users"></i>
                 Usuarios
               </a>
             </li>
 
             <li class="nav-item menuLink">
-              <a class="nav-link " href="#" id="Ticket-Link">
+              <a class="nav-link " href="#" id="Ticket-Burger-Link">
                 <i class="fas fa-ticket-alt"></i>
                 Ticket
               </a>
@@ -81,7 +82,7 @@ if (isset($_SESSION['user'])) { ?>
 
           <?php if ($_SESSION['user']['tipo'] == '1' || $_SESSION['user']['tipo'] == '3') { ?>
             <li class="nav-item menuLink">
-              <a class="nav-link " href="#" id="Mesas-Link">
+              <a class="nav-link " href="#" id="Mesas-Burger-Link">
                 <i class="fas fa-chair"></i>
                 Mesas
               </a>
@@ -214,112 +215,86 @@ if (isset($_SESSION['user'])) { ?>
               <div class="col-sm-6">
                 <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">
-                      With supporting text below as a natural lead-in to additional content.
-                    </p>
-                    <button type="button" class="btn btn-info">
-                      Ventas <span class="badge badge-light">6</span>
-                    </button>
+                    <h5 class="card-title">Ventas Totales</h5>
+           
+                    <h1 class=" badge-info px-2 py-3 text-center" style="font-size: 15px; border-radius:15px"> <strong> Ventas </strong>
+                    <span class="badge badge-light px-2 py-2">5</span>
+                    </h1>
                   </div>
                 </div>
               </div>
               <div class="col-sm-6">
                 <div class="card">
                   <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">
-                      With supporting text below as a natural lead-in to additional content.
-                    </p>
-                    <button type="button" class="btn btn-success">
-                      Clientes <span class="badge badge-light">10</span>
-                    </button>
+                    <h5 class="card-title">Usuarios Registrados</h5>
+                  
+                    <h1 class=" badge-success px-2 py-3 text-center" style="font-size: 15px; border-radius:15px"> <strong> Usuarios </strong>
+                    <span class="badge badge-light px-2 py-2">10</span>
+                    </h1>
+
                   </div>
                 </div>
               </div>
             </div>
+
             <hr>
+            <div class="row">
+              <div class="col-lg-6">
+                <h2>Producto más Vendidos </h2>
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover" style=" text-align: center;">
+                    <thead class="table-info">
+                      <tr>
+                        <th>Unidades</th>
+                        <th>Nombre</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+               
+                    <?php foreach ($productosMasVendidos as $productoVendido) { ?>
+                      <tr>
+                        <td> <strong> <?=  $productoVendido["count(*)"]?> </strong> </td>
+                        <td><?=  $productoVendido["nombre"]?></td>
+                      </tr>
+                    <?php } ?> 
+                    <tr>
+      <th scope="row" class="table-light">Descargar</th>
+      <td colspan="2" class="table-light"><button type="button" class="btn btn-outline-info btn-lg btn-block"><i class="far fa-file-pdf"></i></button>
+</td>
+    </tr>
 
-            <h2>Listado</h2>
-            <div class="table-responsive">
-              <table class="table table-striped table-sm">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Header</th>
-                    <th>Header</th>
-                    <th>Header</th>
-                    <th>Header</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1,001</td>
-                    <td>Lorem</td>
-                    <td>ipsum</td>
-                    <td>dolor</td>
-                    <td>sit</td>
-                  </tr>
-                  <tr>
-                    <td>1,002</td>
-                    <td>amet</td>
-                    <td>consectetur</td>
-                    <td>adipiscing</td>
-                    <td>elit</td>
-                  </tr>
-                  <tr>
-                    <td>1,003</td>
-                    <td>Integer</td>
-                    <td>nec</td>
-                    <td>odio</td>
-                    <td>Praesent</td>
-                  </tr>
-                  <tr>
-                    <td>1,003</td>
-                    <td>libero</td>
-                    <td>Sed</td>
-                    <td>cursus</td>
-                    <td>ante</td>
-                  </tr>
-                  <tr>
-                    <td>1,004</td>
-                    <td>dapibus</td>
-                    <td>diam</td>
-                    <td>Sed</td>
-                    <td>nisi</td>
-                  </tr>
-                  <tr>
-                    <td>1,005</td>
-                    <td>Nulla</td>
-                    <td>quis</td>
-                    <td>sem</td>
-                    <td>at</td>
-                  </tr>
-                  <tr>
-                    <td>1,006</td>
-                    <td>nibh</td>
-                    <td>elementum</td>
-                    <td>imperdiet</td>
-                    <td>Duis</td>
-                  </tr>
-                  <tr>
-                    <td>1,007</td>
-                    <td>sagittis</td>
-                    <td>ipsum</td>
-                    <td>Praesent</td>
-                    <td>mauris</td>
-                  </tr>
-                  <tr>
-                    <td>1,008</td>
-                    <td>Fusce</td>
-                    <td>nec</td>
-                    <td>tellus</td>
-                    <td>sed</td>
-                  </tr>
 
-                </tbody>
-              </table>
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+
+              <div class="col-lg-6">
+                <h2>Producto más Vendidos</h2>
+                <div class="table-responsive">
+                  <table class="table table-striped table-sm">
+                    <thead >
+                      <tr>
+                        <th>Unidades</th>
+                        <th>Nombre</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1,008</td>
+                        <td>Fusce</td>
+                        <td>nec</td>
+                        <td>tellus</td>
+                        <td>sed</td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
+
 
 
           </div>
@@ -409,7 +384,7 @@ if (isset($_SESSION['user'])) { ?>
 
               <?php foreach ($categorias as $categoria) { ?>
 
-                <div class="col-md-3 mb-3 text-center categoria ">
+                <div class="col-xl-3 col-lg-6 col-md-12 mb-3 text-center categoria ">
 
                   <div class="card" style="width: 18rem;" idCategoria=<?= $categoria["idCategoria"] ?>>
                     <img class="card-img-top" src=<?= !empty($categoria["imagen"]) ? 'data:image/png;base64,' . $categoria["imagen"] : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1200px-No_image_3x4.svg.png" ?> alt="Card image cap">
@@ -554,7 +529,7 @@ if (isset($_SESSION['user'])) { ?>
                 <?php
                 foreach ($productos as $producto) { ?>
 
-                  <div class="col-md-3 mb-2 text-center p-3 producto" idProducto=<?= $producto["idProducto"] ?>>
+                  <div class="col-xl-3 col-lg-6 col-md-12 mb-2 text-center p-3 producto" idProducto=<?= $producto["idProducto"] ?>>
 
                     <div class="card" style="width: 18rem;" idCategoria=<?= $producto["idCategoria"] ?>>
                       <img class="card-img-top" src=<?= !empty($producto["imagen"]) ? 'data:image/png;base64,' . $producto["imagen"] : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/No_image_3x4.svg/1200px-No_image_3x4.svg.png" ?> alt="Card image cap">
@@ -729,6 +704,94 @@ if (isset($_SESSION['user'])) { ?>
 
           <div id="Pedidos">
             <h1>Pedidos</h1>
+
+
+            <hr>
+
+
+            <div class="row">
+              <div class="col-xl-12 col-lg-12 col-md-12 text-center menuPedidos">
+                <nav class="nav justify-content-center">
+                  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Pendientes</a>
+                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Finalizados</a>
+                  </div>
+                </nav>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-lg-12 text-center">
+                <div class="tab-content" id="nav-tabContent">
+                  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                    <div class="row mt-5">
+
+
+                      <?php foreach ($lineaTicketPedidos as $linea) {
+
+                        if ($linea["Entregado"] == 0) {
+                      ?>
+                          <div class="col-xl-3 col-lg-3 col-md-6 text-center mt-2 pedidoFila">
+                            <div class="card bg-light mb-3  pedidoCocina" style="max-width: 18rem;">
+                              <div class="card-header bg-info" style="color: white;"> <strong> Mesa <?= $linea["idMesa"] ?> </strong> </div>
+                              <div class="card-body">
+                                <p class="card-text textoPedidoPendiente"> <?= $linea["unidadesPedidas"] ?> X <?= $linea["nombre"] ?> </p>
+                                <p class="card-text fechaPedidoPendiente"> <i class="far fa-clock"></i> <?= $linea["fecha"] ?>
+
+                              </div>
+                              <button type="button" class="btn btn-success text-center finalizarPedido" idLineaTicket=<?= $linea["idLinea"] ?>>Finalizar</button>
+                            </div>
+                          </div>
+                        <?php } ?>
+
+                      <?php } ?>
+
+
+
+
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+
+                    <div class="row pedidosFinalizados">
+                      <?php foreach ($lineaTicketPedidos as $linea) {
+
+                        if ($linea["Entregado"] == 1) {
+
+
+                      ?>
+
+
+
+                          <div class="col-xl-3 col-lg-3 col-md-6 text-center mt-2">
+                            <div class="card bg-success mb-3  pedidoCocina" style="max-width: 18rem;">
+                              <div class="card-header bg-info" style="color: white;"> <strong> Mesa <?= $linea["idMesa"] ?> </strong> </div>
+                              <div class="card-body">
+                                <p class="card-text textoPedidoFinalizado"> <?= $linea["unidadesPedidas"] ?> X <?= $linea["nombre"] ?>
+                                <p class="card-text fechaPedidoFinalizado"> <i class="far fa-clock"></i> <?= $linea["fecha"] ?>
+                                </p>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        <?php } ?>
+                      <?php } ?>
+
+
+                    </div>
+
+
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+
+
+
           </div>
 
           <div id="Usuarios">
@@ -737,7 +800,7 @@ if (isset($_SESSION['user'])) { ?>
             <div class="row">
 
               <?php foreach ($usuarios as $usuario) { ?>
-                <div class="col-xl-3 col-sm-6 mb-5">
+                <div class="col-xl-3 col-lg-6 col-md-12 mb-5">
                   <div class="card cardUsuario" style="width: 18rem;" idUsuario=<?= $usuario["idUsuario"] ?> nombreUsuario=<?= $usuario["nombre"] ?> emailUsuario=<?= $usuario["email"] ?> apellidosUsuario='<?= $usuario["apellidos"] ?>' perfilUsuario=<?= $usuario["perfil"] ?>>
                     <div class="bg-white rounded shadow-sm text-center m-2"><img src="https://ambitioustracks.com/wp-content/uploads/2017/01/1.-fundadores.png" alt="" width="100" class="img-fluid rounded-circle  img-thumbnail shadow-sm">
                       <div class="card-body">
@@ -760,7 +823,6 @@ if (isset($_SESSION['user'])) { ?>
                             <div class="nombreUsuario"> <?= $usuario["nombre"] ?> </div>
                             <div class="apellidosUsuario"> <?= $usuario["apellidos"] ?> </div>
                           </li>
-
                           <i class="fas fa-user-edit m-2 pointer botonEditarUsuario"></i>
                           <i class="fas fa-user-minus m-2 pointer botonBorrarUsuario"></i>
                         </ul>
@@ -814,6 +876,13 @@ if (isset($_SESSION['user'])) { ?>
                         </div>
 
                         <div class="form-row">
+                          <div class="form-group col-md-12">
+                            <i class="fas fa-key"></i> <label for="passwordEdit"> Contraseña </label>
+                            <input type="password" class="form-control" id="inputPasswordUsuario" placeholder="Password" required>
+                          </div>
+                        </div>
+
+                        <div class="form-row">
 
                           <div class="form-group col-md-12">
                             <label for="exampleFormControlSelect1">Tipo</label>
@@ -852,7 +921,7 @@ if (isset($_SESSION['user'])) { ?>
 
 
           <div id="Mesas">
-            <h1>Mesas</h1>
+            <h1> Mesas</h1>
             <hr>
             <div class="row">
 
@@ -927,7 +996,7 @@ if (isset($_SESSION['user'])) { ?>
                       <label type="text"> <i class="fas fa-chalkboard-teacher"></i> <strong> Atendido por </strong> </label>
                     </div>
                     <div class="col-md-5">
-                      <label type="text" id="mesasAtendido"></label>
+                      <label type="text" class="text-center" id="mesasAtendido"></label>
                     </div>
                   </div>
                   <div class="row  mb-1">
@@ -1205,9 +1274,11 @@ if (isset($_SESSION['user'])) { ?>
               </form>
 
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer footerConsultarTicket">
+
               <button type="button" class="btn btn-success" id="consultarTicket">Consultar</button>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
 
             </div>
           </div>
