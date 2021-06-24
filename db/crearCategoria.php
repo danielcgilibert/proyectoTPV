@@ -13,7 +13,6 @@
 	$bd = mysqli_connect($host, $usuario, $contrasenia, $baseDatos);
 	$consulta = "INSERT INTO categoria (nombre,imagen) VALUES('$nombreCategoria','$imagen' )";
 	$resul = mysqli_query($bd, $consulta);
-	echo $consulta;
 
 
 	return $resul;

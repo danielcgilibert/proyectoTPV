@@ -228,3 +228,50 @@ function productos_mas_vendidos()
 	//si hay 1 o más
 	return $listaProductosVendidos;
 }
+
+
+function ventasTotales()
+{
+	include 'conexion.php'; 
+
+	$bd = mysqli_connect($host, $usuario, $contrasenia, $baseDatos);
+	$ins = "SELECT COUNT(idTicket) FROM ticket";
+
+	$resul = mysqli_query($bd, $ins);
+
+	if (!$resul) {
+		return FALSE;
+	}
+
+	$ventas = array();
+
+	while ($fila = mysqli_fetch_assoc($resul)) {
+		$ventas[] = $fila;
+	}
+    
+	//si hay 1 o más
+	return $ventas;
+}
+
+function usuariosTotales()
+{
+	include 'conexion.php'; 
+
+	$bd = mysqli_connect($host, $usuario, $contrasenia, $baseDatos);
+	$ins = "SELECT COUNT(idUsuario) FROM usuario";
+	
+	$resul = mysqli_query($bd, $ins);
+
+	if (!$resul) {
+		return FALSE;
+	}
+
+	$usuarios = array();
+
+	while ($fila = mysqli_fetch_assoc($resul)) {
+		$usuarios[] = $fila;
+	}
+    
+	//si hay 1 o más
+	return $usuarios;
+}

@@ -11,6 +11,10 @@ $categorias = cargar_categorias();
 $usuarios = cargar_usuarios();
 $empresa = cargar_empresa();
 $productosMasVendidos = productos_mas_vendidos();
+$ventasTotales = ventasTotales();
+$usuariosTotales = usuariosTotales();
+
+
 foreach ($categorias as $categoria) {
   $productosCa[$categoria["nombre"]] = cargar_productos($categoria["idCategoria"]);
 }
@@ -71,13 +75,9 @@ if (isset($_SESSION['user'])) { ?>
               </a>
             </li>
 
-            <li class="nav-item menuLink">
-              <a class="nav-link " href="#" id="Ticket-Burger-Link">
-                <i class="fas fa-ticket-alt"></i>
-                Ticket
-              </a>
-            </li>
+           
           <?php } ?>
+          
 
 
           <?php if ($_SESSION['user']['tipo'] == '1' || $_SESSION['user']['tipo'] == '3') { ?>
@@ -89,6 +89,29 @@ if (isset($_SESSION['user'])) { ?>
             </li>
           <?php } ?>
         </ul>
+
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Listados</span>
+            </h6>
+
+            <ul class="nav flex-column mb-2">
+              <li class="nav-item">
+
+                <a class="nav-link listarTicket" href="#">
+                  <i class="fas fa-clipboard-list"></i>
+                  Imprimir un ticket
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link listadoTickets" href="#" >
+                  <i class="fas fa-list"></i>
+                  Listado Tickets
+                </a>
+              </li>
+
+            </ul>
+
+        
       </div>
       <form class="m-4" action="./db/logout.php">
         <button type="submit" class="btn"> <i class="fas fa-sign-out-alt"></i> Sign out</button>
@@ -148,12 +171,7 @@ if (isset($_SESSION['user'])) { ?>
                   </a>
                 </li>
 
-                <li class="nav-item menuLink">
-                  <a class="nav-link " href="#" id="Ticket-Link">
-                    <i class="fas fa-ticket-alt"></i>
-                    Ticket
-                  </a>
-                </li>
+
               <?php } ?>
 
 
@@ -181,23 +199,12 @@ if (isset($_SESSION['user'])) { ?>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <i class="far fa-file"></i>
-                  Listado Ejemplo
+                <a class="nav-link listadoTickets" href="#">
+                  <i class="fas fa-list"></i>
+                  Listado Tickets
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <i class="far fa-file"></i>
-                  Listado Ejemplo
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <i class="far fa-file"></i>
-                  Listado Ejemplo
-                </a>
-              </li>
+
             </ul>
           </div>
         </nav>
@@ -216,9 +223,9 @@ if (isset($_SESSION['user'])) { ?>
                 <div class="card">
                   <div class="card-body">
                     <h5 class="card-title">Ventas Totales</h5>
-           
+
                     <h1 class=" badge-info px-2 py-3 text-center" style="font-size: 15px; border-radius:15px"> <strong> Ventas </strong>
-                    <span class="badge badge-light px-2 py-2">5</span>
+                      <span class="badge badge-light px-2 py-2"><?=$ventasTotales[0]["COUNT(idTicket)"] ?></span>
                     </h1>
                   </div>
                 </div>
@@ -227,9 +234,9 @@ if (isset($_SESSION['user'])) { ?>
                 <div class="card">
                   <div class="card-body">
                     <h5 class="card-title">Usuarios Registrados</h5>
-                  
+
                     <h1 class=" badge-success px-2 py-3 text-center" style="font-size: 15px; border-radius:15px"> <strong> Usuarios </strong>
-                    <span class="badge badge-light px-2 py-2">10</span>
+                      <span class="badge badge-light px-2 py-2"><?=$usuariosTotales[0]["COUNT(idUsuario)"] ?></span>
                     </h1>
 
                   </div>
@@ -239,8 +246,8 @@ if (isset($_SESSION['user'])) { ?>
 
             <hr>
             <div class="row">
-              <div class="col-lg-6">
-                <h2>Producto más Vendidos </h2>
+              <div class="col-lg-12">
+                <h2>Productos más Vendidos </h2>
                 <div class="table-responsive">
                   <table class="table table-bordered table-hover" style=" text-align: center;">
                     <thead class="table-info">
@@ -250,18 +257,21 @@ if (isset($_SESSION['user'])) { ?>
                       </tr>
                     </thead>
                     <tbody>
-               
-                    <?php foreach ($productosMasVendidos as $productoVendido) { ?>
+
+                      <?php foreach ($productosMasVendidos as $productoVendido) { ?>
+                        <tr>
+                          <td> <strong> <?= $productoVendido["count(*)"] ?> </strong> </td>
+                          <td><?= $productoVendido["nombre"] ?></td>
+                        </tr>
+                      <?php } ?>
                       <tr>
-                        <td> <strong> <?=  $productoVendido["count(*)"]?> </strong> </td>
-                        <td><?=  $productoVendido["nombre"]?></td>
+                        <th scope="row" class="table-light">Descargar</th>
+                        <form action="./generarPdfPVendidos.php" method="post" target="_blank"">
+                        <td colspan="2" class="table-light"><button type="submit" class="btn btn-outline-info btn-lg btn-block"><i class="far fa-file-pdf"></i></button>
+
+                        </form>
+                        </td>
                       </tr>
-                    <?php } ?> 
-                    <tr>
-      <th scope="row" class="table-light">Descargar</th>
-      <td colspan="2" class="table-light"><button type="button" class="btn btn-outline-info btn-lg btn-block"><i class="far fa-file-pdf"></i></button>
-</td>
-    </tr>
 
 
                     </tbody>
@@ -270,29 +280,7 @@ if (isset($_SESSION['user'])) { ?>
 
               </div>
 
-              <div class="col-lg-6">
-                <h2>Producto más Vendidos</h2>
-                <div class="table-responsive">
-                  <table class="table table-striped table-sm">
-                    <thead >
-                      <tr>
-                        <th>Unidades</th>
-                        <th>Nombre</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>1,008</td>
-                        <td>Fusce</td>
-                        <td>nec</td>
-                        <td>tellus</td>
-                        <td>sed</td>
-                      </tr>
-
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+            
             </div>
 
 
@@ -732,7 +720,7 @@ if (isset($_SESSION['user'])) { ?>
 
                         if ($linea["Entregado"] == 0) {
                       ?>
-                          <div class="col-xl-3 col-lg-3 col-md-6 text-center mt-2 pedidoFila">
+                          <div class="col-xl-3 col-lg-3 col-md-6 text-center mt-2 pedidoFila animate__animated animate__swing">
                             <div class="card bg-light mb-3  pedidoCocina" style="max-width: 18rem;">
                               <div class="card-header bg-info" style="color: white;"> <strong> Mesa <?= $linea["idMesa"] ?> </strong> </div>
                               <div class="card-body">
@@ -754,7 +742,7 @@ if (isset($_SESSION['user'])) { ?>
                   </div>
                   <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
 
-                    <div class="row pedidosFinalizados">
+                    <div class="row pedidosFinalizados mt-5">
                       <?php foreach ($lineaTicketPedidos as $linea) {
 
                         if ($linea["Entregado"] == 1) {
@@ -763,8 +751,7 @@ if (isset($_SESSION['user'])) { ?>
                       ?>
 
 
-
-                          <div class="col-xl-3 col-lg-3 col-md-6 text-center mt-2">
+                          <div class="col-xl-3 col-lg-3 col-md-6 text-center mt-2 animate__animated animate__swing">
                             <div class="card bg-success mb-3  pedidoCocina" style="max-width: 18rem;">
                               <div class="card-header bg-info" style="color: white;"> <strong> Mesa <?= $linea["idMesa"] ?> </strong> </div>
                               <div class="card-body">
@@ -914,10 +901,6 @@ if (isset($_SESSION['user'])) { ?>
           </div>
 
 
-
-          <div id="Ticket">
-            <h1>Ticket</h1>
-          </div>
 
 
           <div id="Mesas">
@@ -1285,6 +1268,61 @@ if (isset($_SESSION['user'])) { ?>
 
         </div>
       </div>
+
+      <div class="modal fade" id="modalListadoTickets" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title"><i class="fas fa-list"></i> Listado Tickets</h4>
+
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+
+
+
+              <form id="formEditarUsuario">
+
+                <div class="row justify-content-center">
+
+                  <div class="form-group row col-md-12 justify-content-center">
+                    <label for="example-datetime-local-input" class="form-label text-left"><i class="fas fa-hourglass-start"></i>Fecha Inicial</label>
+                    <div class="col-12 mb-2">
+                      <input class="form-control" type="datetime-local" value="2021-08-19T13:45:00" id="fechaInicioTicket">
+                    </div>
+                  </div>
+
+
+
+                  <div class="form-group row col-md-12 justify-content-center">
+                    <label for="example-datetime-local-input" class="form-label text-left"><i class="fas fa-hourglass-end"></i>Fecha Final</label>
+                    <div class="col-12">
+                      <input class="form-control" type="datetime-local" value="2025-08-19T13:45:00" id="fechaFinalTicket">
+                    </div>
+                  </div>
+
+                </div>
+
+              </form>
+              <div class="tablaResultadoFechas">
+
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" id="consultarTicketsFecha">Consultar</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+
+
 
       <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
       <!--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->

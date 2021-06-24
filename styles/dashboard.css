@@ -23,6 +23,8 @@
   transition: all 0.1s ;
 }
 .menuLateral a:hover{
+  padding: 20px;
+
   color: #58a1f0;
 }
 .menuLateral a:focus{
@@ -112,7 +114,7 @@
 }
 .menuPedidos .nav a:hover
 {
-font-size: 35px;
+font-size: 30px;
 }
 .menuPedidos .nav a:link
 {
@@ -180,6 +182,7 @@ img {
 .sidebar .nav-link.active {
   color: #007bff;
   font-weight:bold;
+  font-size: 17px;
 }
 
 .pointer {

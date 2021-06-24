@@ -4,7 +4,7 @@ $(document).ready(function () {
   var padre = "";
   //var total = 0.00;
   var lineas = [];
-
+  var timerInterval;
   $(".informacionPOP").click(function ({ target }) {
     $(".informacionPOP").popover({
       html: true,
@@ -140,7 +140,14 @@ $(document).ready(function () {
       let idTicket = parseInt($(".numeroTicket").text());
       let idMesa = parseInt($(".mesaId").text());
       let fecha = $(".fecha").text();
-      var date = new Date(fecha);
+      fecha = fecha.split(' ', 3);
+      fecha = fecha.join(':');
+      fecha = fecha.split('/', 3);
+      fecha = fecha.join(':');
+      fecha = fecha.split(':', fecha.length);
+      var date = new Date(fecha[2],fecha[1]-1,fecha[0],fecha[5],fecha[6]);
+      
+
       var usaDate = date.toLocaleDateString("zh-Hans-CN", {
         hourCycle: "h23",
         hour: "2-digit",
@@ -148,6 +155,7 @@ $(document).ready(function () {
       });
 
       fecha = usaDate;
+
 
       let idUsuario = parseInt($(".usuario").attr("idUsuario"));
       let empresaId = 1;
@@ -271,11 +279,11 @@ $(document).ready(function () {
     $.ajax({
       type: "POST",
       url: "./db/cargarProductosCategoria.php",
+      dataType: "json",
       data: {
         id: categoria,
       },
       success: function (data) {
-        data = JSON.parse(data);
         $(".productosCargados").empty();
         data.forEach((element) => {
           let imagen =

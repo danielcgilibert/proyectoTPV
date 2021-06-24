@@ -45,7 +45,7 @@ $(document).ready(function () {
               success: function (results) {
                 let datosTickeVacio = JSON.parse(results);
                 let total = 0;
-                console.log(datosTickeVacio);
+
                 $("#mesasTicketId").text(ticketid.trim());
                 $("#mesasAtendido").text(
                   datosTickeVacio[0]["nombreUsuario"] +
@@ -140,7 +140,7 @@ $(document).ready(function () {
       if (
         inputNombreProducto[0].value.trim().length > 3 &&
         inputDescripcionProducto[0].value.trim().length > 3 &&
-        inputPrecioProducto[0].value.trim().length > 1
+        inputPrecioProducto[0].value.trim().length > 0
       ) {
         var formData = new FormData();
 
@@ -331,7 +331,7 @@ $(document).ready(function () {
       if (
         inputNombreProducto[0].value.trim().length > 3 &&
         inputDescripcionProducto[0].value.trim().length > 3 &&
-        inputPrecioProducto[0].value.trim().length > 1
+        inputPrecioProducto[0].value.trim().length > 0
       ) {
         var formData = new FormData();
         formData.append("nombre", inputNombreProducto[0].value.trim());
@@ -690,13 +690,13 @@ $(document).ready(function () {
     $("#editarUsuario").on("click", (e) => {
       e.stopImmediatePropagation();
       Swal.fire({
-        title: '¿Quieres cambiar la contraseña?',
+        title: "¿Quieres cambiar la contraseña?",
         text: "Si pulsa el botón cancelar se guardaran todos los datos menos la contraseña",
-        icon: 'warning',
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí'
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí",
       }).then((result) => {
         if (result.isConfirmed) {
           $.ajax({
@@ -716,11 +716,11 @@ $(document).ready(function () {
                   .find(".card-title")
                   .text(inputEditNombreUsuario.value.trim());
                 padre.attr("perfilUsuario", inputEditTipoUsuario.value.trim());
-  
+
                 $("#camarero").removeAttr("selected");
                 $("#cocinero").removeAttr("selected");
                 $("#gerente").removeAttr("selected");
-  
+
                 if (padre.attr("perfilUsuario") == "1") {
                   padre.find(".tipoPerfil").text("Camarero");
                   $("#camarero").attr("selected", true);
@@ -731,15 +731,17 @@ $(document).ready(function () {
                   padre.find(".tipoPerfil").text("Gerente");
                   $("#gerente").attr("selected", true);
                 }
-  
-                padre.find(".emailUsuario").text(inputEmailUsuario.value.trim());
+
+                padre
+                  .find(".emailUsuario")
+                  .text(inputEmailUsuario.value.trim());
                 padre
                   .find(".nombreUsuario")
                   .text(inputEditNombreUsuario.value.trim());
                 padre
                   .find(".apellidosUsuario")
                   .text(inputApellidosUsuario.value.trim());
-  
+
                 console.log(inputEditTipoUsuario.value.trim());
                 Swal.fire({
                   position: "center",
@@ -752,7 +754,7 @@ $(document).ready(function () {
                 $("#modalEditarUsuario").modal("hide");
               } else {
                 let fallo = "";
-                data == 1 ? fallo = "Contraseña minimo con 8 caracteres" : "";
+                data == 1 ? (fallo = "Contraseña minimo con 8 caracteres") : "";
                 if (data == 2) {
                   fallo = `
                   <i class="fas fa-times"></i> Contraseña invalida :
@@ -764,9 +766,11 @@ $(document).ready(function () {
               </ul>  
                   `;
                 }
-                data == 3 ? (fallo = "fallo en el update de la base de datos") : "";
+                data == 3
+                  ? (fallo = "fallo en el update de la base de datos")
+                  : "";
                 data == 4 ? (fallo = "email ya existe") : "";
-  
+
                 Swal.fire({
                   icon: "error",
                   html: `${fallo}`,
@@ -775,7 +779,7 @@ $(document).ready(function () {
               }
             },
           });
-        }else{
+        } else {
           $.ajax({
             type: "POST",
             url: "./db/editarUsuario.php",
@@ -792,11 +796,11 @@ $(document).ready(function () {
                   .find(".card-title")
                   .text(inputEditNombreUsuario.value.trim());
                 padre.attr("perfilUsuario", inputEditTipoUsuario.value.trim());
-  
+
                 $("#camarero").removeAttr("selected");
                 $("#cocinero").removeAttr("selected");
                 $("#gerente").removeAttr("selected");
-  
+
                 if (padre.attr("perfilUsuario") == "1") {
                   padre.find(".tipoPerfil").text("Camarero");
                   $("#camarero").attr("selected", true);
@@ -807,15 +811,17 @@ $(document).ready(function () {
                   padre.find(".tipoPerfil").text("Gerente");
                   $("#gerente").attr("selected", true);
                 }
-  
-                padre.find(".emailUsuario").text(inputEmailUsuario.value.trim());
+
+                padre
+                  .find(".emailUsuario")
+                  .text(inputEmailUsuario.value.trim());
                 padre
                   .find(".nombreUsuario")
                   .text(inputEditNombreUsuario.value.trim());
                 padre
                   .find(".apellidosUsuario")
                   .text(inputApellidosUsuario.value.trim());
-  
+
                 console.log(inputEditTipoUsuario.value.trim());
                 Swal.fire({
                   position: "center",
@@ -829,9 +835,7 @@ $(document).ready(function () {
             },
           });
         }
-      })
-        
-  
+      });
     });
   });
 
@@ -1080,5 +1084,86 @@ $(document).ready(function () {
         }
       },
     });
+  });
+
+  $(".listadoTickets").on("click", function ({ target }) {
+    $(".tablaResultadoFechas").empty();
+
+    $("#consultarTicketsFecha").on("click", function ({ target }) {
+      let fechaInicio = $("#fechaInicioTicket").val().trim();
+      let fechaFin = $("#fechaFinalTicket").val().trim();
+
+      var date = new Date(fechaInicio);
+      var usaDate = date.toLocaleDateString("zh-Hans-CN", {
+        hourCycle: "h23",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      var date2 = new Date(fechaFin);
+      var usaDate2 = date2.toLocaleDateString("zh-Hans-CN", {
+        hourCycle: "h23",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      $.ajax({
+        type: "POST",
+        url: "./db/consultarTicketsFecha.php",
+        dataType: "json",
+        data: {
+          fechaInicio: usaDate,
+          fechaFin: usaDate2,
+        },
+        success: function (data) {
+          $(".tablaResultadoFechas").empty();
+
+          console.log(data);
+          let datos;
+          datos = '<div class="table-responsive"> ';
+          datos += `<table class="table table-hover text-center">
+          <thead>
+            <tr>
+              <th scope="col">Ticket</th>
+              <th scope="col">Unidades</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+        `;
+
+          let total = 0;
+
+          for (let i in data) {
+            total = 0;
+            for (let j in data[i]) {
+              total = total + parseInt(j) * parseInt(data[i][j]);
+              datos += `<tr>
+              <th scope="row">${i}</th>
+              <td>${j}</td>
+              <td>${data[i][j]} €</td>
+              <td>${total} € </td>
+              </tr>`;
+            }
+            datos += `<tr><td colspan="4" class="table-info"> <strong><i class="fas fa-calculator"></i> Total del Ticket ${i}  : <span class="badge badge-primary p-1" style="font-size:15px"> ${total} €</span>      </strong> </td></tr>`;
+          }
+
+          datos += `  </tbody>
+          </table>
+          `;
+          datos += "</div>";
+          if (Object.keys(data).length > 0) {
+            datos +="<hr/>";
+
+          } else {
+            datos += "<h3 class='text-center'>Sin registros</h3>";
+          }
+          $(".tablaResultadoFechas").append(datos);
+        },
+      });
+    });
+
+    $("#modalListadoTickets").modal();
   });
 });

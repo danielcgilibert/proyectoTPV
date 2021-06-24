@@ -5,7 +5,7 @@ include 'conexion.php';
     $categoria =  $_REQUEST["id"];
 
 	$bd = mysqli_connect($host, $usuario, $contrasenia, $baseDatos);
-	$ins = "SELECT * from PRODUCTO where idCategoria = $categoria";
+	$ins = "SELECT * from producto where idCategoria = $categoria";
 	$resul = mysqli_query($bd, $ins);
 
 	if (!$resul) {
